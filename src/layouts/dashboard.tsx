@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import classNames from 'classnames/dedupe';
 import DashboardNav, {
   TDashboardNav,
@@ -14,6 +14,7 @@ interface Props {
   nav: TDashboardNav;
   contentClassName?: string;
   currentPath: string;
+  sidebarFooter?: ReactNode;
 }
 
 export default function DashboardLayout({
@@ -21,6 +22,7 @@ export default function DashboardLayout({
   nav,
   contentClassName,
   currentPath,
+  sidebarFooter,
 }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const routes = getNestedRoute(nav, currentPath);
@@ -30,6 +32,7 @@ export default function DashboardLayout({
       <MobileSideBar
         open={sidebarOpen}
         setOpen={setSidebarOpen}
+        footer={sidebarFooter}
       >
         <DashboardNav
           close={() => setSidebarOpen(false)}
@@ -59,15 +62,22 @@ export default function DashboardLayout({
         {/* Static sidebar for desktop */}
 
         <div className="flex w-full xl:max-w-8xl xl:mx-auto flex-grow xl:border-r xl:border-l">
-          <div className="hidden xl:block xl:w-1/6">
-            <div className="flex flex-col gap-y-5 overflow-y-auto px-6 border-r h-full bg-white">
+          <div className="hidden xl:flex xl:w-1/6 xl:flex-col">
+            <div className="sticky top-0 flex h-screen flex-col gap-y-5 overflow-y-auto border-r bg-white px-6">
               <div className="flex h-16 shrink-0 items-center">
                 <Logo />
               </div>
-              <DashboardNav
-                selectedPath={selectedRoute?.href || ''}
-                nav={nav}
-              />
+              <div className="flex min-h-0 flex-1 flex-col">
+                <DashboardNav
+                  selectedPath={selectedRoute?.href || ''}
+                  nav={nav}
+                />
+                {sidebarFooter && (
+                  <div className="mt-auto border-t border-gray-200 pt-4 pb-6">
+                    {sidebarFooter}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <main className="bg-white w-full xl:w-5/6 flex flex-col">

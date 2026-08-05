@@ -12,10 +12,12 @@ export default function MobileSideBar({
   children,
   open,
   setOpen,
+  footer,
 }: {
   children: ReactNode;
   open: boolean;
   setOpen: (v: boolean) => void;
+  footer?: ReactNode;
 }) {
   return (
     <Dialog
@@ -53,10 +55,17 @@ export default function MobileSideBar({
           </TransitionChild>
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto">
-            <div className="flex shrink-0 items-center h-16 p-6">
+            <div className="flex h-16 shrink-0 items-center p-6">
               <Logo />
             </div>
-            <div className={'px-8'}>{children}</div>
+            <div className="flex min-h-0 flex-1 flex-col px-8 pb-6">
+              <div className="flex-1">{children}</div>
+              {footer && (
+                <div className="mt-auto border-t border-gray-200 pt-4">
+                  {footer}
+                </div>
+              )}
+            </div>
           </div>
         </DialogPanel>
       </div>

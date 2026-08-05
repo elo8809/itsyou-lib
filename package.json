@@ -1,6 +1,6 @@
 {
   "name": "@itsyouagency/ui",
-  "version": "1.45.0",
+  "version": "1.46.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -54,6 +54,7 @@
     "tailwindcss": "^3.4.17",
     "ts-loader": "^9.5.2",
     "url-loader": "^4.1.1",
+    "webpack": "5.103.0",
     "webpack-cli": "^6.0.1"
   },
   "peerDependencies": {
