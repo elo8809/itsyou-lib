@@ -8,6 +8,7 @@ export declare function flattenNavigation(nav: WorkspaceNav): WorkspaceRoute[];
 export declare function findActiveRoute(nav: WorkspaceNav, path: string): WorkspaceRoute;
 export declare const workspaceLabels: {
     navigation: string;
+    secondaryNavigation: string;
     openNavigation: string;
     closeNavigation: string;
     skipToContent: string;

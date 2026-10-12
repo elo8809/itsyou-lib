@@ -63,14 +63,22 @@ export function createChatApi(baseUrl: string) {
       cursor?: string,
       signal?: AbortSignal,
       clientRequestId?: string,
+      archived = false,
     ) =>
       request<{
         viewer: ChatViewer;
+        generalChat?: ChatSummary | null;
+        archivedCount?: number;
         items: ChatSummary[];
         nextCursor: string | null;
       }>(
         '',
-        { q, cursor, clientRequestId },
+        {
+          q,
+          cursor,
+          clientRequestId,
+          archived: String(archived),
+        },
         undefined,
         signal,
       ),
@@ -153,6 +161,34 @@ export function createChatApi(baseUrl: string) {
         chatId,
         sequence,
       }),
+    archive: (chatId: string, archived: boolean) =>
+      request<ChatDetail>('/archive', undefined, {
+        chatId,
+        archived,
+      }),
+    edit: (
+      chatId: string,
+      messageId: string,
+      body: string,
+      editSequence: number,
+    ) =>
+      request<ChatMessage>('/messages/edit', undefined, {
+        chatId,
+        messageId,
+        body,
+        editSequence,
+      }),
+    edits: (
+      chatId: string,
+      after: number,
+      signal?: AbortSignal,
+    ) =>
+      request<{ items: ChatMessage[]; hasMore: boolean }>(
+        '/message-edits',
+        { chatId, after },
+        undefined,
+        signal,
+      ),
   };
 }
 export type ChatApi = ReturnType<typeof createChatApi>;

@@ -9,6 +9,7 @@ import {
 import Button from '../base/Button';
 import Icon from '../base/Icon';
 import ActionDialog from '../workspace/ActionDialog';
+import ChatMessageEditor from './ChatMessageEditor';
 import {
   EmptyState,
   InlineNotice,
@@ -42,6 +43,8 @@ export default function ChatThread({
   sendDraft,
   sendingInBackground,
   refresh,
+  onChanged,
+  onArchived,
 }: {
   api: ChatApi;
   id: string;
@@ -60,8 +63,19 @@ export default function ChatThread({
   ) => Promise<ChatMessage>;
   sendingInBackground: boolean;
   refresh: number;
+  onChanged: () => void;
+  onArchived: (chat: ChatDetail) => void;
 }) {
   const [chat, setChat] = useState<ChatDetail | null>(null);
+  const isGeneral = chat?.kind === 'GENERAL';
+  const title =
+    isGeneral && !viewer.canManage
+      ? t.generalChat
+      : chat?.title;
+  const detailsLabel = isGeneral
+    ? t.generalDetails
+    : t.details;
+  const canEditGroup = canManage && !isGeneral;
   const [messages, setMessages] = useState<ChatMessage[]>(
     [],
   );
@@ -73,12 +87,20 @@ export default function ChatThread({
   const [sendError, setSendError] = useState(false);
   const [sending, setSending] = useState(false);
   const [details, setDetails] = useState(false);
+  const [editing, setEditing] =
+    useState<ChatMessage | null>(null);
+  const [archiveBusy, setArchiveBusy] = useState(false);
+  const [archiveError, setArchiveError] = useState(false);
   const [unseen, setUnseen] = useState(false);
   const [retry, setRetry] = useState(0);
   const scroller = useRef<HTMLDivElement>(null);
   const composer = useRef<HTMLTextAreaElement>(null);
   const pinned = useRef(true);
   const lastFetched = useRef(0);
+  const lastEdited = useRef(0);
+  const editedMessages = useRef(
+    new Map<string, ChatMessage>(),
+  );
   const initialized = useRef(false);
   const lastRead = useRef(0);
   const latest = useRef(0);
@@ -101,8 +123,11 @@ export default function ChatThread({
       setChat(null);
       setMessages([]);
       setDetails(false);
+      setEditing(null);
       initialized.current = false;
       lastFetched.current = 0;
+      lastEdited.current = 0;
+      editedMessages.current.clear();
       latest.current = 0;
       return true;
     }
@@ -188,6 +213,7 @@ export default function ChatThread({
           detail.lastReadSequence,
         );
         if (!initialized.current) {
+          lastEdited.current = detail.editSequence || 0;
           const page = await api.messages(
             id,
             {},
@@ -221,6 +247,49 @@ export default function ChatThread({
               );
               if (!pinned.current) setUnseen(true);
             }
+            more = page.hasMore && page.items.length > 0;
+          }
+        }
+        if (
+          (detail.editSequence || 0) > lastEdited.current
+        ) {
+          let more = true;
+          while (more && !controller.signal.aborted) {
+            const page = await api.edits(
+              id,
+              lastEdited.current,
+              controller.signal,
+            );
+            if (controller.signal.aborted) return;
+            for (const message of page.items) {
+              const previous = editedMessages.current.get(
+                message.id,
+              );
+              if (
+                !previous ||
+                (message.editSequence || 0) >=
+                  (previous.editSequence || 0)
+              )
+                editedMessages.current.set(
+                  message.id,
+                  message,
+                );
+            }
+            setMessages((current) => {
+              const loaded = new Set(
+                current.map((message) => message.id),
+              );
+              return mergeMessages(
+                current,
+                page.items.filter((message) =>
+                  loaded.has(message.id),
+                ),
+              );
+            });
+            if (page.items.length)
+              lastEdited.current =
+                page.items.at(-1)!.editSequence ||
+                lastEdited.current;
             more = page.hasMore && page.items.length > 0;
           }
         }
@@ -289,9 +358,20 @@ export default function ChatThread({
           top: node.scrollTop,
         };
       pinned.current = false;
-      setMessages((current) =>
-        mergeMessages(page.items, current),
-      );
+      setMessages((current) => {
+        const corrections = page.items.flatMap(
+          (message) => {
+            const edited = editedMessages.current.get(
+              message.id,
+            );
+            return edited ? [edited] : [];
+          },
+        );
+        return mergeMessages(
+          mergeMessages(current, page.items),
+          corrections,
+        );
+      });
       setHasOlder(page.hasMore);
       setError('');
     } catch (e) {
@@ -344,6 +424,23 @@ export default function ChatThread({
       }
     }
   }
+  async function archive() {
+    if (!chat || chat.isUnstarted || archiveBusy) return;
+    setArchiveBusy(true);
+    setArchiveError(false);
+    try {
+      const saved = await api.archive(id, !chat.archived);
+      if (mounted.current) {
+        setChat(saved);
+        onArchived(saved);
+      }
+    } catch (e) {
+      if (mounted.current && !forbidden(e))
+        setArchiveError(true);
+    } finally {
+      if (mounted.current) setArchiveBusy(false);
+    }
+  }
   function dateLabel(date: string) {
     const when = new Date(date),
       today = new Date(),
@@ -377,7 +474,7 @@ export default function ChatThread({
   return (
     <section
       className="ui-chat-thread"
-      aria-label={chat?.title || t.chats}
+      aria-label={title || t.chats}
     >
       <header className="ui-chat-thread-header">
         <button
@@ -393,30 +490,37 @@ export default function ChatThread({
           />
         </button>
         <span className="ui-chat-avatar ui-chat-group-avatar">
-          <Icon name="Users" size={21} />
+          <Icon
+            name={isGeneral ? 'Chat' : 'Users'}
+            size={21}
+          />
         </span>
         <div className="ui-chat-thread-title">
-          <h2>{chat?.title || t.loading}</h2>
+          <h2>{title || t.loading}</h2>
           <button
             type="button"
             onClick={() => setDetails(true)}
             disabled={!chat}
           >
             {chat
-              ? `${chat.participantCount} ${t.participants}`
+              ? isGeneral
+                ? viewer.canManage
+                  ? `${t.generalChat} · ${roleLabel(chat.owner?.role || 'REMOVED', t)}`
+                  : t.agencyTeam
+                : `${chat.participantCount} ${t.participants}`
               : t.loading}
           </button>
         </div>
         <button
           type="button"
           className="ui-icon-button"
-          aria-label={t.details}
+          aria-label={detailsLabel}
           onClick={() => setDetails(true)}
           disabled={!chat}
         >
           <Icon name="Info" size={19} />
         </button>
-        {canManage && chat && (
+        {canEditGroup && chat && (
           <button
             type="button"
             className="ui-icon-button"
@@ -426,7 +530,45 @@ export default function ChatThread({
             <Icon name="Settings" size={19} />
           </button>
         )}
+        {chat && !chat.isUnstarted && (
+          <button
+            type="button"
+            className="ui-icon-button"
+            disabled={archiveBusy}
+            aria-busy={archiveBusy}
+            aria-label={
+              chat.archived ? t.restore : t.archive
+            }
+            title={chat.archived ? t.restore : t.archive}
+            onClick={() => void archive()}
+          >
+            <Icon
+              name={
+                chat.archived ? 'ArrowNarrowUp' : 'Archive'
+              }
+              size={19}
+            />
+          </button>
+        )}
       </header>
+      {archiveError && (
+        <InlineNotice tone="error">
+          {t.archiveError}
+        </InlineNotice>
+      )}
+      {chat?.archived && (
+        <div
+          className="ui-chat-archived-notice"
+          role="status"
+        >
+          <Icon
+            name="Archive"
+            size={15}
+            aria-hidden="true"
+          />
+          <span>{t.archiveHint}</span>
+        </div>
+      )}
       {error && (
         <InlineNotice
           tone="error"
@@ -448,7 +590,7 @@ export default function ChatThread({
         role="log"
         aria-label={t.chats}
         aria-live="polite"
-        aria-relevant="additions"
+        aria-relevant="additions text"
         aria-busy={loading}
         onScroll={() => {
           const node = scroller.current!;
@@ -482,8 +624,16 @@ export default function ChatThread({
             {!messages.length && !error && (
               <EmptyState
                 icon="Chat"
-                title={t.firstMessage}
-                description={t.firstMessageHint}
+                title={
+                  isGeneral
+                    ? t.generalFirstMessage
+                    : t.firstMessage
+                }
+                description={
+                  isGeneral
+                    ? t.generalFirstMessageHint
+                    : t.firstMessageHint
+                }
               />
             )}
             {messages.map((message, index) => {
@@ -542,26 +692,54 @@ export default function ChatThread({
                       )}
                       <div className="ui-chat-bubble">
                         <p dir="auto">{message.body}</p>
-                        <time
-                          dateTime={message.createdAt}
-                          title={new Date(
-                            message.createdAt,
-                          ).toLocaleString(locale)}
-                        >
-                          {new Date(
-                            message.createdAt,
-                          ).toLocaleTimeString(locale, {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
+                        <div className="ui-chat-message-meta">
                           {own && (
-                            <Icon
-                              name="Success"
-                              size={12}
-                              aria-hidden="true"
-                            />
+                            <button
+                              type="button"
+                              className="ui-chat-edit-message"
+                              aria-label={t.editMessage}
+                              title={t.editMessage}
+                              onClick={() =>
+                                setEditing(message)
+                              }
+                            >
+                              <Icon
+                                name="Pen"
+                                size={14}
+                                aria-hidden="true"
+                              />
+                            </button>
                           )}
-                        </time>
+                          <time
+                            dateTime={message.createdAt}
+                            title={new Date(
+                              message.createdAt,
+                            ).toLocaleString(locale)}
+                          >
+                            {message.editedAt && (
+                              <span
+                                title={new Date(
+                                  message.editedAt,
+                                ).toLocaleString(locale)}
+                              >
+                                {t.edited} ·{' '}
+                              </span>
+                            )}
+                            {new Date(
+                              message.createdAt,
+                            ).toLocaleTimeString(locale, {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                            {own && (
+                              <Icon
+                                name="Success"
+                                size={12}
+                                aria-hidden="true"
+                              />
+                            )}
+                          </time>
+                        </div>
                       </div>
                     </div>
                   </article>
@@ -664,8 +842,8 @@ export default function ChatThread({
         <ActionDialog
           open
           onClose={() => setDetails(false)}
-          title={t.details}
-          description={chat.title}
+          title={detailsLabel}
+          description={title}
           closeLabel={t.close}
         >
           <div className="ui-chat-details">
@@ -704,8 +882,10 @@ export default function ChatThread({
                 </div>
               ))}
             </div>
-            <p className="ui-chat-help">{t.private}</p>
-            {canManage && (
+            <p className="ui-chat-help">
+              {isGeneral ? t.generalPrivate : t.private}
+            </p>
+            {canEditGroup && (
               <Button
                 variant="secondary"
                 icon="Settings"
@@ -719,6 +899,23 @@ export default function ChatThread({
             )}
           </div>
         </ActionDialog>
+      )}
+      {editing && (
+        <ChatMessageEditor
+          api={api}
+          chatId={id}
+          message={editing}
+          labels={t}
+          onClose={() => setEditing(null)}
+          onSaved={(message) => {
+            editedMessages.current.set(message.id, message);
+            setMessages((current) =>
+              mergeMessages(current, [message]),
+            );
+            setEditing(null);
+            onChanged();
+          }}
+        />
       )}
     </section>
   );

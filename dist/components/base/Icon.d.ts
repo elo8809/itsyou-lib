@@ -1,5 +1,6 @@
 import React from 'react';
 declare const map: {
+    Archive: React.FC<React.SVGProps<SVGSVGElement>>;
     Upload: React.FC<React.SVGProps<SVGSVGElement>>;
     Download: React.FC<React.SVGProps<SVGSVGElement>>;
     User: React.FC<React.SVGProps<SVGSVGElement>>;

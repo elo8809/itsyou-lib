@@ -46,6 +46,8 @@ export interface WorkspaceLayoutProps {
   homeHref?: string;
   contentClassName?: string;
   sidebarFooter?: ReactNode;
+  /** Navigation pinned below the scrollable menu and above sign out. */
+  sidebarBottomNav?: Navigation;
   /** Pin the account's sign-out action below the scrollable navigation. */
   sidebarSignOut?: boolean;
   footer?: ReactNode;
@@ -68,6 +70,7 @@ export default function WorkspaceLayout({
   homeHref = '/',
   contentClassName = '',
   sidebarFooter,
+  sidebarBottomNav = {},
   sidebarSignOut = false,
   footer,
   headerActions,
@@ -77,9 +80,18 @@ export default function WorkspaceLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const mainId = useId();
-  const selected = findActiveRoute(nav, currentPath);
-  const showSidebarSignOut = sidebarSignOut && !!account?.onSignOut;
-  const sidebarClassName = showSidebarSignOut
+  const navigation = { ...nav };
+  for (const [group, items] of Object.entries(sidebarBottomNav)) {
+    navigation[group] = [...(navigation[group] || []), ...items];
+  }
+  const selected = findActiveRoute(navigation, currentPath);
+  const hasBottomNav = Object.values(sidebarBottomNav).some(
+    (items) => items.length > 0,
+  );
+  const showSidebarSignOut =
+    sidebarSignOut && !!account?.onSignOut;
+  const showSidebarActions = hasBottomNav || showSidebarSignOut;
+  const sidebarClassName = showSidebarActions
     ? ' ui-sidebar--with-actions'
     : '';
   const initials =
@@ -141,27 +153,46 @@ export default function WorkspaceLayout({
           label={labels.navigation}
         />
       </div>
-      {showSidebarSignOut ? (
+      {showSidebarActions ? (
         <div className="ui-sidebar-actions">
           {sidebarFooter && (
-            <div className="ui-sidebar-caption">{sidebarFooter}</div>
+            <div className="ui-sidebar-caption">
+              {sidebarFooter}
+            </div>
           )}
-          <button
-            type="button"
-            className="ui-nav-link ui-sidebar-sign-out"
-            onClick={() => {
-              setMobileOpen(false);
-              account?.onSignOut?.();
-            }}
-          >
-            <Icon name="Switch" size={19} aria-hidden="true" />
-            <span>{labels.signOut}</span>
-          </button>
+          {hasBottomNav && (
+            <WorkspaceNav
+              nav={sidebarBottomNav}
+              selectedPath={currentPath}
+              close={() => setMobileOpen(false)}
+              label={labels.secondaryNavigation}
+              showGroupLabels={false}
+            />
+          )}
+          {showSidebarSignOut && (
+            <button
+              type="button"
+              className="ui-nav-link ui-sidebar-sign-out"
+              onClick={() => {
+                setMobileOpen(false);
+                account?.onSignOut?.();
+              }}
+            >
+              <Icon
+                name="Switch"
+                size={19}
+                aria-hidden="true"
+              />
+              <span>{labels.signOut}</span>
+            </button>
+          )}
         </div>
-      ) : sidebarFooter && (
-        <div className="ui-sidebar-bottom">
-          {sidebarFooter}
-        </div>
+      ) : (
+        sidebarFooter && (
+          <div className="ui-sidebar-bottom">
+            {sidebarFooter}
+          </div>
+        )
       )}
     </>
   );
@@ -170,14 +201,18 @@ export default function WorkspaceLayout({
       <a href={`#${mainId}`} className="ui-skip-link">
         {labels.skipToContent}
       </a>
-      <aside className={`ui-sidebar${sidebarClassName}`}>{sidebar}</aside>
+      <aside className={`ui-sidebar${sidebarClassName}`}>
+        {sidebar}
+      </aside>
       <Dialog
         open={mobileOpen}
         onClose={setMobileOpen}
         className="ui-mobile-dialog"
       >
         <DialogBackdrop className="ui-dialog-backdrop" />
-        <DialogPanel className={`ui-mobile-sidebar${sidebarClassName}`}>
+        <DialogPanel
+          className={`ui-mobile-sidebar${sidebarClassName}`}
+        >
           <DialogTitle className="sr-only">
             {labels.navigation}
           </DialogTitle>
@@ -194,7 +229,11 @@ export default function WorkspaceLayout({
       </Dialog>
       <div className="ui-workspace">
         <header className="ui-topbar">
-          <div className="ui-update-progress" data-active={busy} aria-hidden="true" />
+          <div
+            className="ui-update-progress"
+            data-active={busy}
+            aria-hidden="true"
+          />
           <button
             type="button"
             className="ui-icon-button ui-menu-trigger"
@@ -294,7 +333,7 @@ export default function WorkspaceLayout({
         )}
       </div>
       <CommandMenu
-        nav={nav}
+        nav={navigation}
         open={searchOpen}
         onClose={() => setSearchOpen(false)}
         onNavigate={onNavigate}

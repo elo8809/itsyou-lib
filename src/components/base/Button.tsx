@@ -51,7 +51,10 @@ export default function Button({
   );
   const content = (
     <>
-      <span className="ui-button-content" data-loading={!!isLoading}>
+      <span
+        className="ui-button-content"
+        data-loading={!!isLoading}
+      >
         {icon && (
           <Icon
             className={iconClassName}
@@ -60,11 +63,18 @@ export default function Button({
           />
         )}
         <span>{children}</span>
-        {trailingIcon && <Icon size={16} name={trailingIcon} />}
+        {trailingIcon && (
+          <Icon size={16} name={trailingIcon} />
+        )}
       </span>
       {isLoading && (
-        <span className="ui-button-loader" aria-hidden="true">
-          <Loader color={tone === 'primary' ? 'light' : 'dark'} />
+        <span
+          className="ui-button-loader"
+          aria-hidden="true"
+        >
+          <Loader
+            color={tone === 'primary' ? 'light' : 'dark'}
+          />
         </span>
       )}
     </>

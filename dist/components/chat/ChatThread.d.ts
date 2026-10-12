@@ -1,7 +1,7 @@
 import { type ChatApi } from './api';
 import type { ChatDetail, ChatLocale, ChatMessage, ChatViewer } from './types';
 import type { ChatLabels } from './labels';
-export default function ChatThread({ api, id, viewer, canManage, locale, labels: t, draft, onDraft, onBack, onManage, onRead, sendDraft, sendingInBackground, refresh, }: {
+export default function ChatThread({ api, id, viewer, canManage, locale, labels: t, draft, onDraft, onBack, onManage, onRead, sendDraft, sendingInBackground, refresh, onChanged, onArchived, }: {
     api: ChatApi;
     id: string;
     viewer: ChatViewer;
@@ -16,4 +16,6 @@ export default function ChatThread({ api, id, viewer, canManage, locale, labels:
     sendDraft: (id: string, body: string) => Promise<ChatMessage>;
     sendingInBackground: boolean;
     refresh: number;
+    onChanged: () => void;
+    onArchived: (chat: ChatDetail) => void;
 }): import("react/jsx-runtime").JSX.Element;

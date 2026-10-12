@@ -1,3 +1,6 @@
+import DataRegion, {
+  ListSkeleton,
+} from '../workspace/DataRegion';
 import { useState } from 'react';
 import Link from 'next/link';
 import Button from '../base/Button';
@@ -23,6 +26,8 @@ export type NotificationProps = {
   locale?: 'en' | 'de';
   inboxHref?: string;
   pitchUrl?: (id: string) => string;
+  /** Overrides the hint under the empty state, e.g. what will show up here. */
+  emptyHint?: string;
 };
 const copy = {
   en: {
@@ -79,6 +84,7 @@ const copy = {
 };
 type Labels = typeof copy.en;
 function eventIcon(kind: string): IconType {
+  if (kind.startsWith('ORDER_REVIEW_')) return 'Star';
   if (kind.includes('CONTRACT') || kind === 'MODEL_SIGNED')
     return 'FileCheck';
   if (kind === 'RESOURCE_AVAILABLE') return 'File';
@@ -219,64 +225,53 @@ function Content({
           </InlineNotice>
         </div>
       )}
-      {state.error && (
-        <div className="ui-notification-notice">
-          <InlineNotice
-            tone="error"
-            action={
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={state.refresh}
-              >
-                {labels.retry}
-              </Button>
-            }
-          >
-            {labels.error}
-          </InlineNotice>
-        </div>
-      )}
-      {!feed && !state.error ? (
-        <div
-          className="ui-notification-notice"
-          aria-label={labels.loading}
-        >
-          <Skeleton className="h-32" />
-        </div>
-      ) : feed && !feed.items.length ? (
-        <EmptyState
-          icon="Bell"
-          title={labels.empty}
-          description={labels.emptyHint}
-        />
-      ) : (
-        feed && (
-          <ul className="ui-notification-list">
-            {(compact
-              ? feed.items.slice(0, 5)
-              : feed.items
-            ).map((item) => (
-              <NotificationRow
-                key={item.id}
-                item={item}
-                labels={labels}
-                locale={props.locale || 'en'}
-                admin={props.audience === 'admin'}
-                busy={!!state.busy}
-                onRead={() =>
-                  void state.act('read', { id: item.id })
-                }
-                onDone={() =>
-                  void state.act('resolve', { id: item.id })
-                }
-                onNavigate={onNavigate}
-                pitchUrl={props.pitchUrl}
-              />
-            ))}
-          </ul>
-        )
-      )}
+      <DataRegion
+        loading={!feed && !state.error}
+        updating={state.loading}
+        error={state.error}
+        hasData={!!feed}
+        onRetry={state.refresh}
+        locale={props.locale || 'en'}
+        errorTitle={labels.error}
+        minHeight={compact ? 240 : 400}
+        skeleton={<ListSkeleton rows={compact ? 3 : 5} />}
+      >
+        {feed && !feed.items.length ? (
+          <EmptyState
+            icon="Bell"
+            title={labels.empty}
+            description={props.emptyHint || labels.emptyHint}
+          />
+        ) : (
+          feed && (
+            <ul className="ui-notification-list">
+              {(compact
+                ? feed.items.slice(0, 5)
+                : feed.items
+              ).map((item) => (
+                <NotificationRow
+                  key={item.id}
+                  item={item}
+                  labels={labels}
+                  locale={props.locale || 'en'}
+                  admin={props.audience === 'admin'}
+                  busy={!!state.busy}
+                  onRead={() =>
+                    void state.act('read', { id: item.id })
+                  }
+                  onDone={() =>
+                    void state.act('resolve', {
+                      id: item.id,
+                    })
+                  }
+                  onNavigate={onNavigate}
+                  pitchUrl={props.pitchUrl}
+                />
+              ))}
+            </ul>
+          )
+        )}
+      </DataRegion>
     </>
   );
 }
@@ -310,7 +305,9 @@ export function NotificationBell(props: NotificationProps) {
             {!!state.feed?.unreadCount && (
               <button
                 type="button"
-                disabled={!!state.busy}
+                disabled={
+                  !!state.busy || !state.feed?.unreadCount
+                }
                 onClick={() =>
                   void state.act('read', {
                     before: state.feed!.asOf,
@@ -381,24 +378,29 @@ export function NotificationInbox(
   return (
     <div className="ui-notification-inbox">
       <PageHeader
-        eyebrow={labels.eyebrow}
+        eyebrow={
+          props.audience === 'client' &&
+          props.locale === 'de'
+            ? 'IHR POSTEINGANG'
+            : labels.eyebrow
+        }
         title={admin ? labels.inbox : labels.title}
         subtitle={labels.subtitle}
         actions={
-          state.feed?.unreadCount ? (
-            <Button
-              variant="secondary"
-              isLoading={state.busy === 'all'}
-              disabled={!!state.busy}
-              onClick={() =>
-                void state.act('read', {
-                  before: state.feed!.asOf,
-                })
-              }
-            >
-              {labels.readAll}
-            </Button>
-          ) : undefined
+          <Button
+            variant="secondary"
+            isLoading={state.busy === 'all'}
+            disabled={
+              !!state.busy || !state.feed?.unreadCount
+            }
+            onClick={() =>
+              void state.act('read', {
+                before: state.feed!.asOf,
+              })
+            }
+          >
+            {labels.readAll}
+          </Button>
         }
       />
       <FilterTabs

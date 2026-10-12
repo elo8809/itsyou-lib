@@ -12,6 +12,7 @@ import type {
 } from './types';
 import type { ChatLabels } from './labels';
 import { groupConversations } from './grouping';
+import { roleLabel } from './utils';
 
 function Group({
   label,
@@ -112,6 +113,8 @@ export default function ChatConversationList({
         });
   }
   function conversation(chat: ChatSummary) {
+    const general = chat.kind === 'GENERAL';
+    const ownGeneral = general && chat.id === 'general';
     return (
       <button
         type="button"
@@ -124,21 +127,30 @@ export default function ChatConversationList({
         onClick={() => onSelect(chat.id)}
       >
         <span className="ui-chat-avatar ui-chat-group-avatar">
-          <Icon name="Users" size={18} />
+          <Icon
+            name={general ? 'Chat' : 'Users'}
+            size={18}
+          />
         </span>
         <span className="ui-chat-list-content">
           <span className="ui-chat-list-title">
-            <strong>{chat.title}</strong>
-            <time dateTime={chat.updatedAt}>
-              {time(chat.updatedAt)}
-            </time>
+            <strong>
+              {ownGeneral ? t.generalChat : chat.title}
+            </strong>
+            {chat.updatedAt && (
+              <time dateTime={chat.updatedAt}>
+                {time(chat.updatedAt)}
+              </time>
+            )}
           </span>
           <span className="ui-chat-list-preview">
             <span>
               {chat.lastMessage
                 ? `${chat.lastMessage.senderName}: ${chat.lastMessage.body}`
-                : chat.description ||
-                  `${chat.participantCount} ${t.participants}`}
+                : general
+                  ? t.generalHint
+                  : chat.description ||
+                    `${chat.participantCount} ${t.participants}`}
             </span>
             {chat.unreadCount > 0 && (
               <span
@@ -152,7 +164,11 @@ export default function ChatConversationList({
             )}
           </span>
           <span className="ui-chat-list-meta">
-            {chat.participantCount} {t.participants}
+            {general
+              ? ownGeneral
+                ? t.agencyTeam
+                : `${t.generalChat} · ${roleLabel(chat.owner?.role || 'REMOVED', t)}`
+              : `${chat.participantCount} ${t.participants}`}
           </span>
         </span>
       </button>

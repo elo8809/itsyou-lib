@@ -17,6 +17,18 @@ export const chatLabels = {
     search: 'Search chats, requests, or clients',
     request: 'Request',
     general: 'General',
+    generalChat: 'General chat',
+    agencyTeam: 'IT’S YOU team',
+    generalHint:
+      'Your direct conversation with the agency team.',
+    generalFirstMessage: 'How can we help?',
+    generalFirstMessageHint:
+      'Send a message to start your conversation with the IT’S YOU team.',
+    generalDetails: 'Conversation details',
+    generalPrivate:
+      'This conversation is visible to you and all agency admins and team members.',
+    staffInboxHint:
+      'General chats are started by clients and models. All agency admins and team members can reply.',
     noRequest: 'No request assigned',
     selectRequest: 'Choose a request',
     changeRequest: 'Change request',
@@ -26,6 +38,24 @@ export const chatLabels = {
       'Link this conversation to a request and its client.',
     all: 'All',
     unread: 'Unread',
+    archived: 'Archived',
+    archive: 'Archive chat',
+    restore: 'Restore chat',
+    archiveHint:
+      'Archived for you. New messages return this chat to your inbox.',
+    archiveError:
+      'Could not update the archive. Please try again.',
+    noArchived: 'No archived conversations',
+    noArchivedHint:
+      'Chats you archive appear here. You can restore them at any time.',
+    edited: 'Edited',
+    editMessage: 'Edit message',
+    editHint:
+      'Everyone in this conversation will see the updated message and an Edited label.',
+    editError:
+      'Your changes could not be saved. Your draft is still here; try again.',
+    editConflict:
+      'This message changed in another tab. Close and reopen the editor to load the latest version.',
     noChats: 'Your conversations start here',
     noChatsHint:
       'The agency will add you to a group when there is something to discuss.',
@@ -113,6 +143,17 @@ export const chatLabels = {
     search: 'Chats, Anfragen oder Kunden suchen',
     request: 'Anfrage',
     general: 'Allgemein',
+    generalChat: 'Allgemeiner Chat',
+    agencyTeam: 'IT’S YOU Team',
+    generalHint: 'Dein direkter Kontakt zum Agenturteam.',
+    generalFirstMessage: 'Wie können wir dir helfen?',
+    generalFirstMessageHint:
+      'Schreib eine Nachricht, um deine Unterhaltung mit dem IT’S YOU Team zu starten.',
+    generalDetails: 'Details zur Unterhaltung',
+    generalPrivate:
+      'Diese Unterhaltung ist für dich und alle Admins und Teammitglieder der Agentur sichtbar.',
+    staffInboxHint:
+      'Allgemeine Chats werden von Kunden und Models gestartet. Alle Admins und Teammitglieder der Agentur können antworten.',
     noRequest: 'Keine Anfrage zugewiesen',
     selectRequest: 'Anfrage auswählen',
     changeRequest: 'Anfrage ändern',
@@ -122,6 +163,24 @@ export const chatLabels = {
       'Verknüpfe diesen Chat mit einer Anfrage und ihrem Kunden.',
     all: 'Alle',
     unread: 'Ungelesen',
+    archived: 'Archiviert',
+    archive: 'Chat archivieren',
+    restore: 'Chat wiederherstellen',
+    archiveHint:
+      'Für dich archiviert. Neue Nachrichten bringen diesen Chat zurück in deinen Posteingang.',
+    archiveError:
+      'Das Archiv konnte nicht aktualisiert werden. Bitte erneut versuchen.',
+    noArchived: 'Keine archivierten Unterhaltungen',
+    noArchivedHint:
+      'Archivierte Chats erscheinen hier. Du kannst sie jederzeit wiederherstellen.',
+    edited: 'Bearbeitet',
+    editMessage: 'Nachricht bearbeiten',
+    editHint:
+      'Alle Teilnehmenden sehen die aktualisierte Nachricht und den Hinweis „Bearbeitet“.',
+    editError:
+      'Deine Änderungen konnten nicht gespeichert werden. Dein Entwurf bleibt erhalten. Bitte erneut versuchen.',
+    editConflict:
+      'Diese Nachricht wurde in einem anderen Tab geändert. Schließe und öffne die Bearbeitung erneut, um die aktuelle Version zu laden.',
     noChats: 'Hier beginnen die Unterhaltungen',
     noChatsHint:
       'Die Agentur fügt dich zu einer Gruppe hinzu, sobald es etwas zu besprechen gibt.',

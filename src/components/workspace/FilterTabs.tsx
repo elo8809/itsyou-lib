@@ -45,7 +45,7 @@ export default function FilterTabs<T extends string>({
         >
           {option.label}{' '}
           {option.count !== undefined && (
-            <span>{option.count}</span>
+            <span className="ui-content-tab-count">{option.count}</span>
           )}
         </button>
       ))}

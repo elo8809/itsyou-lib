@@ -63,7 +63,11 @@ export default function useNotificationFeed(
     setPages(1);
     setError(false);
     setActionError(false);
-  }, [url, identity, filter]);
+  }, [url, identity]);
+  useEffect(() => {
+    setPages(1);
+    setError(false);
+  }, [filter]);
   useEffect(() => {
     if (!identity) return;
     const abort = new AbortController();

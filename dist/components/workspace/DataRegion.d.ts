@@ -13,7 +13,7 @@ export default function DataRegion({ children, loading, updating, error, hasData
     minHeight?: number | string;
     className?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function ListSkeleton({ rows, rowHeight }: {
+export declare function ListSkeleton({ rows, rowHeight, }: {
     rows?: number;
     rowHeight?: number;
 }): import("react/jsx-runtime").JSX.Element;

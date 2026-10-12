@@ -28,40 +28,88 @@ export default function DataRegion({
   minHeight?: number | string;
   className?: string;
 }) {
-  const retry = locale === 'de' ? 'Erneut versuchen' : 'Try again';
-  const title = errorTitle || (locale === 'de'
-    ? 'Daten konnten nicht geladen werden'
-    : 'Unable to load this content');
+  const retry =
+    locale === 'de' ? 'Erneut versuchen' : 'Try again';
+  const title =
+    errorTitle ||
+    (locale === 'de'
+      ? 'Daten konnten nicht geladen werden'
+      : 'Unable to load this content');
   return (
-    <div className={`ui-data-region ${className}`} style={{ minHeight }} aria-busy={!!loading || !!updating}>
-      <div className="ui-update-progress" data-active={!!updating} aria-hidden="true" />
+    <div
+      className={`ui-data-region ${className}`}
+      style={{ minHeight }}
+      aria-busy={!!loading || !!updating}
+    >
       {loading && !hasData ? (
         <div role="status">
-          <span className="sr-only">{locale === 'de' ? 'Wird geladen…' : 'Loading…'}</span>
+          <span className="sr-only">
+            {locale === 'de' ? 'Wird geladen…' : 'Loading…'}
+          </span>
           {skeleton || <ListSkeleton />}
         </div>
       ) : error && !hasData ? (
-        <EmptyState title={title} action={onRetry && <Button variant="secondary" onClick={onRetry}>{retry}</Button>} />
-      ) : children}
+        <EmptyState
+          title={title}
+          action={
+            onRetry && (
+              <Button variant="secondary" onClick={onRetry}>
+                {retry}
+              </Button>
+            )
+          }
+        />
+      ) : (
+        children
+      )}
+      <div
+        className="ui-update-progress"
+        style={{ margin: 0 }}
+        data-active={!!updating}
+        aria-hidden="true"
+      />
       {error && hasData && (
         <div className="ui-refresh-notice" role="status">
-          <span>{locale === 'de'
-            ? 'Aktualisierung fehlgeschlagen. Der letzte geladene Stand bleibt sichtbar.'
-            : 'Couldn’t refresh. Showing the last loaded version.'}</span>
-          {onRetry && <button type="button" onClick={onRetry} disabled={updating}>{retry}</button>}
+          <span>
+            {locale === 'de'
+              ? 'Aktualisierung fehlgeschlagen. Der letzte geladene Stand bleibt sichtbar.'
+              : 'Couldn’t refresh. Showing the last loaded version.'}
+          </span>
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              disabled={updating}
+            >
+              {retry}
+            </button>
+          )}
         </div>
       )}
     </div>
   );
 }
 
-export function ListSkeleton({ rows = 5, rowHeight = 80 }: { rows?: number; rowHeight?: number }) {
+export function ListSkeleton({
+  rows = 5,
+  rowHeight = 80,
+}: {
+  rows?: number;
+  rowHeight?: number;
+}) {
   return (
     <div className="ui-list-skeleton" aria-hidden="true">
       {Array.from({ length: rows }, (_, index) => (
-        <div className="ui-list-skeleton-row" style={{ minHeight: rowHeight }} key={index}>
+        <div
+          className="ui-list-skeleton-row"
+          style={{ minHeight: rowHeight }}
+          key={index}
+        >
           <Skeleton className="ui-list-skeleton-avatar" />
-          <div><Skeleton className="ui-list-skeleton-title" /><Skeleton className="ui-list-skeleton-detail" /></div>
+          <div>
+            <Skeleton className="ui-list-skeleton-title" />
+            <Skeleton className="ui-list-skeleton-detail" />
+          </div>
           <Skeleton className="ui-list-skeleton-action" />
         </div>
       ))}

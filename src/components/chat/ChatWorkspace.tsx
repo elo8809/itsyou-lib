@@ -58,6 +58,8 @@ export default function ChatWorkspace({
   const [chats, setChats] = useState<ChatSummary[]>([]);
   const [search, setSearch] = useState('');
   const [unreadOnly, setUnreadOnly] = useState(false);
+  const [archived, setArchived] = useState(false);
+  const [archivedCount, setArchivedCount] = useState(0);
   const [pages, setPages] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -184,9 +186,33 @@ export default function ChatWorkspace({
             cursor,
             controller.signal,
             clientRequestId,
+            archived,
           );
           if (controller.signal.aborted) return;
           setViewer(data.viewer);
+          setArchivedCount(data.archivedCount || 0);
+          if (
+            page === 0 &&
+            data.generalChat &&
+            !clientRequestId &&
+            !embedded
+          ) {
+            const query = search.trim().toLocaleLowerCase();
+            if (
+              !query ||
+              `${t.generalChat} ${t.agencyTeam}`
+                .toLocaleLowerCase()
+                .includes(query)
+            )
+              rows.push(data.generalChat);
+            if (!initialSelection.current && !archived) {
+              initialSelection.current = true;
+              setSelected(
+                (current) =>
+                  current || data.generalChat!.id,
+              );
+            }
+          }
           rows.push(...data.items);
           cursor = data.nextCursor || undefined;
           if (!cursor) break;
@@ -250,10 +276,25 @@ export default function ChatWorkspace({
     refresh,
     clientRequestId,
     embedded,
+    t,
+    archived,
   ]);
   function select(id?: string) {
     setSelected(id);
     onSelectChat?.(id);
+  }
+  function changeView(
+    archiveView: boolean,
+    unread = false,
+  ) {
+    setArchived(archiveView);
+    setUnreadOnly(unread);
+    setPages(1);
+    if (archiveView !== archived) {
+      setChats([]);
+      setLoading(true);
+      select(undefined);
+    }
   }
   const visibleChats = chats.filter(
     (chat) =>
@@ -274,7 +315,9 @@ export default function ChatWorkspace({
     !loading &&
     !error &&
     !chats.length &&
-    !search
+    !search &&
+    !archived &&
+    !archivedCount
   )
     return (
       <section
@@ -356,17 +399,27 @@ export default function ChatWorkspace({
           >
             <button
               type="button"
-              aria-pressed={!unreadOnly}
-              onClick={() => setUnreadOnly(false)}
+              aria-pressed={!unreadOnly && !archived}
+              onClick={() => changeView(false)}
             >
               {t.all}
             </button>
             <button
               type="button"
-              aria-pressed={unreadOnly}
-              onClick={() => setUnreadOnly(true)}
+              aria-pressed={unreadOnly && !archived}
+              onClick={() => changeView(false, true)}
             >
               {t.unread}
+            </button>
+            <button
+              type="button"
+              aria-pressed={archived}
+              onClick={() => changeView(true)}
+            >
+              {t.archived}
+              {archivedCount > 0
+                ? ` (${archivedCount})`
+                : ''}
             </button>
           </div>
           {error && (
@@ -405,16 +458,20 @@ export default function ChatWorkspace({
                   <EmptyState
                     icon="Chat"
                     title={
-                      search || unreadOnly
-                        ? t.noResults
-                        : t.noChats
+                      archived && !search
+                        ? t.noArchived
+                        : search || unreadOnly
+                          ? t.noResults
+                          : t.noChats
                     }
                     description={
-                      search || unreadOnly
-                        ? t.noResultsHint
-                        : canManage
-                          ? t.noChatsAdmin
-                          : t.noChatsHint
+                      archived && !search
+                        ? t.noArchivedHint
+                        : search || unreadOnly
+                          ? t.noResultsHint
+                          : canManage
+                            ? t.noChatsAdmin
+                            : t.noChatsHint
                     }
                   />
                 )}
@@ -458,6 +515,23 @@ export default function ChatWorkspace({
             sendDraft={sendDraft}
             sendingInBackground={!!sendingIds[activeChat]}
             refresh={refresh}
+            onChanged={refreshChats}
+            onArchived={(chat) => {
+              setLoading(true);
+              setArchivedCount((count) =>
+                Math.max(
+                  0,
+                  count + (chat.archived ? 1 : -1),
+                ),
+              );
+              setChats((current) =>
+                current.filter(
+                  (item) => item.id !== chat.id,
+                ),
+              );
+              select(undefined);
+              refreshChats();
+            }}
           />
         ) : (
           <div className="ui-chat-welcome">
@@ -467,7 +541,7 @@ export default function ChatWorkspace({
             <h2>{t.choose}</h2>
             <p>{t.chooseHint}</p>
             <span className="ui-chat-help">
-              {t.private}
+              {canManage ? t.staffInboxHint : t.generalHint}
             </span>
             {canManage && (
               <Button
@@ -496,6 +570,7 @@ export default function ChatWorkspace({
             ]);
             setSearch('');
             setUnreadOnly(false);
+            setArchived(false);
             select(chat.id);
             refreshChats();
           }}

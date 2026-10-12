@@ -63,19 +63,18 @@ const InputWrapper = ({
       )}
       <div className={'space-y-1'}>
         {children}
-        {!hideError && (
+        {!hideError && error && (
           <div
             id={errorId}
-            role={error ? 'alert' : undefined}
-            aria-hidden={!error}
-            className={classNames(
-              'font-medium text-red-600 flex space-x-1 items-center invisible h-4',
-              {
-                '!visible': error,
-              },
-            )}
+            role="alert"
+            className="font-medium text-xs text-red-600 flex gap-1 items-start"
           >
-            <Icon size={16} name={'Info'} />
+            <Icon
+              size={16}
+              name={'Info'}
+              className="shrink-0"
+              aria-hidden="true"
+            />
             <span>{error}</span>
           </div>
         )}

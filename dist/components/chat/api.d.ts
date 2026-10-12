@@ -4,8 +4,10 @@ export declare class ChatApiError extends Error {
     constructor(message: string, status: number);
 }
 export declare function createChatApi(baseUrl: string): {
-    list: (q: string, cursor?: string, signal?: AbortSignal, clientRequestId?: string) => Promise<{
+    list: (q: string, cursor?: string, signal?: AbortSignal, clientRequestId?: string, archived?: boolean) => Promise<{
         viewer: ChatViewer;
+        generalChat?: ChatSummary | null;
+        archivedCount?: number;
         items: ChatSummary[];
         nextCursor: string | null;
     }>;
@@ -31,6 +33,12 @@ export declare function createChatApi(baseUrl: string): {
     send: (chatId: string, body: string, clientMessageId: string) => Promise<ChatMessage>;
     read: (chatId: string, sequence: number) => Promise<{
         ok: true;
+    }>;
+    archive: (chatId: string, archived: boolean) => Promise<ChatDetail>;
+    edit: (chatId: string, messageId: string, body: string, editSequence: number) => Promise<ChatMessage>;
+    edits: (chatId: string, after: number, signal?: AbortSignal) => Promise<{
+        items: ChatMessage[];
+        hasMore: boolean;
     }>;
 };
 export type ChatApi = ReturnType<typeof createChatApi>;

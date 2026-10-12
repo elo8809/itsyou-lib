@@ -43,7 +43,7 @@ export default function Tabs({
         wrapperClassName,
         underline
           ? 'ui-content-tabs'
-          : 'flex flex-col items-center space-y-6',
+          : 'ui-segmented-tabs',
       )}
     >
       <div
@@ -51,7 +51,7 @@ export default function Tabs({
           listWrapperClassName,
           underline
             ? 'ui-content-tabs-scroll'
-            : 'w-full flex justify-center',
+            : 'ui-segmented-tabs-scroll',
         )}
       >
         <Tab.List
@@ -60,7 +60,7 @@ export default function Tabs({
             listClassName,
             underline
               ? 'ui-content-tabs-list'
-              : 'flex rounded-xl bg-gray-100 p-1 w-full max-w-md overflow-x-auto no-scrollbar',
+              : 'ui-segmented-tabs-list',
           )}
         >
           {items.map((item) => (
@@ -71,14 +71,8 @@ export default function Tabs({
                   buttonClassName,
                   underline
                     ? 'ui-content-tab'
-                    : 'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
-                  selected
-                    ? [
-                        !underline &&
-                          'bg-white text-gray-900 shadow',
-                        selectedClassName,
-                      ]
-                    : !underline && 'hover:bg-white/[0.12]',
+                    : 'ui-segmented-tab',
+                  selected && selectedClassName,
                 )
               }
             >

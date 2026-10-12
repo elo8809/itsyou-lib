@@ -40,6 +40,7 @@ export function findActiveRoute(
 }
 export const workspaceLabels = {
   navigation: 'Main navigation',
+  secondaryNavigation: 'More pages',
   openNavigation: 'Open navigation',
   closeNavigation: 'Close navigation',
   skipToContent: 'Skip to content',

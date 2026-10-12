@@ -80,8 +80,10 @@ import Link from '../../assets/icons/link-external-02.svg';
 import Lens from '../../assets/icons/camera-lens.svg';
 import Clipboard from '../../assets/icons/clipboard.svg';
 import Browser from '../../assets/icons/browser.svg';
+import Archive from '../../assets/icons/archive.svg';
 
 const map = {
+  Archive,
   Upload,
   Download,
   User,

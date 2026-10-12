@@ -11,7 +11,14 @@ export function groupConversations(
 ): ChatClientGroup[] {
   const clients = new Map<string, ChatClientGroup>();
   for (const chat of chats) {
-    const client = chat.request?.client || null;
+    const client =
+      chat.request?.client ||
+      (chat.owner?.client?.id
+        ? {
+            id: chat.owner.client.id,
+            name: chat.owner.client.name,
+          }
+        : null);
     const id = client?.id || 'general';
     let group = clients.get(id);
     if (!group) {

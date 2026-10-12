@@ -3,6 +3,7 @@ export { default as NotificationMenu, type NotificationMenuProps, } from './Noti
 export { default as CommandMenu } from './CommandMenu';
 export { default as PageHeader } from './PageHeader';
 export { default as Panel, type PanelProps } from './Panel';
+export { default as FaqCenter, type FaqTopic, type FaqQuestion, type FaqLabels, type FaqSupport, } from './FaqCenter';
 export { default as FilterTabs, type FilterTabsProps, type FilterOption, } from './FilterTabs';
 export { default as Pagination, type PaginationProps, } from './Pagination';
 export { default as MetricCard } from './MetricCard';

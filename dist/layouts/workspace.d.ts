@@ -20,10 +20,12 @@ export interface WorkspaceLayoutProps {
     homeHref?: string;
     contentClassName?: string;
     sidebarFooter?: ReactNode;
+    /** Navigation pinned below the scrollable menu and above sign out. */
+    sidebarBottomNav?: Navigation;
     /** Pin the account's sign-out action below the scrollable navigation. */
     sidebarSignOut?: boolean;
     footer?: ReactNode;
     headerActions?: ReactNode;
     labels?: Partial<WorkspaceLabels>;
 }
-export default function WorkspaceLayout({ children, nav, currentPath, navigationKey, busy, onNavigate, account, workspaceName, workspaceDescription, brand, brandSubtitle, homeHref, contentClassName, sidebarFooter, sidebarSignOut, footer, headerActions, labels: customLabels, }: WorkspaceLayoutProps): import("react/jsx-runtime").JSX.Element;
+export default function WorkspaceLayout({ children, nav, currentPath, navigationKey, busy, onNavigate, account, workspaceName, workspaceDescription, brand, brandSubtitle, homeHref, contentClassName, sidebarFooter, sidebarBottomNav, sidebarSignOut, footer, headerActions, labels: customLabels, }: WorkspaceLayoutProps): import("react/jsx-runtime").JSX.Element;

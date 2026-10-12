@@ -44,16 +44,22 @@ export default function IconButton({
   const label = rest['aria-label'] || title || icon;
   const content = (
     <>
-      <span className="ui-button-content" data-loading={!!isLoading}>
+      <span
+        className="ui-button-content"
+        data-loading={!!isLoading}
+      >
         <Icon
-      size={size || 18}
-      name={icon}
-      className={iconClassName}
-      aria-hidden="true"
+          size={size || 18}
+          name={icon}
+          className={iconClassName}
+          aria-hidden="true"
         />
       </span>
       {isLoading && (
-        <span className="ui-button-loader" aria-hidden="true">
+        <span
+          className="ui-button-loader"
+          aria-hidden="true"
+        >
           <Loader color={loaderColor} />
         </span>
       )}

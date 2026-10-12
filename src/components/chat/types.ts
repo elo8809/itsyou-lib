@@ -9,12 +9,17 @@ export type ChatPerson = {
   name: string;
   role: ChatRole;
   email?: string;
-  client?: { name: string } | null;
+  client?: { id?: string; name: string } | null;
 };
 export type ChatViewer = ChatPerson & {
   canManage: boolean;
 };
 export type ChatSummary = {
+  kind?: 'GROUP' | 'GENERAL';
+  isUnstarted?: boolean;
+  archived?: boolean;
+  editSequence?: number;
+  owner?: ChatPerson | null;
   request?: ChatRequest | null;
   id: string;
   title: string;
@@ -29,8 +34,8 @@ export type ChatSummary = {
     body: string;
     createdAt: string;
   } | null;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: string | null;
+  updatedAt: string | null;
 };
 export type ChatDetail = ChatSummary & {
   participants: ChatPerson[];
@@ -42,6 +47,8 @@ export type ChatMessage = {
   senderName: string;
   senderRole: ChatRole;
   body: string;
+  editSequence?: number;
+  editedAt?: string | null;
   sequence: number;
   clientMessageId: string;
   createdAt: string;

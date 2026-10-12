@@ -10,17 +10,21 @@ export default function WorkspaceNav({
   selectedPath,
   close,
   label = 'Main navigation',
+  showGroupLabels = true,
 }: {
   nav: Navigation;
   selectedPath: string;
   close?: () => void;
   label?: string;
+  showGroupLabels?: boolean;
 }) {
   return (
     <nav aria-label={label} className="ui-nav">
       {Object.entries(nav).map(([group, items]) => (
         <div key={group} className="ui-nav-group">
-          <p className="ui-nav-label">{group}</p>
+          {showGroupLabels && (
+            <p className="ui-nav-label">{group}</p>
+          )}
           <ul>
             {items.map((item) => (
               <li key={item.href}>

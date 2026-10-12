@@ -24,12 +24,19 @@ export function mergeMessages(
   current: ChatMessage[],
   incoming: ChatMessage[],
 ) {
-  return [
-    ...new Map(
-      [...current, ...incoming].map((message) => [
-        message.id,
-        message,
-      ]),
-    ).values(),
-  ].sort((a, b) => a.sequence - b.sequence);
+  const messages = new Map(
+    current.map((message) => [message.id, message]),
+  );
+  for (const message of incoming) {
+    const previous = messages.get(message.id);
+    if (
+      !previous ||
+      (message.editSequence || 0) >=
+        (previous.editSequence || 0)
+    )
+      messages.set(message.id, message);
+  }
+  return [...messages.values()].sort(
+    (a, b) => a.sequence - b.sequence,
+  );
 }

@@ -18,11 +18,17 @@ export default function SearchMultiSelect({
   options,
   value,
   onChange,
+  placeholder = 'Any',
+  noResultsMessage = 'No matching options.',
+  toggleLabel,
 }: {
   label: string;
   options: SearchMultiSelectOption[];
   value: string[];
   onChange: (values: string[]) => void;
+  placeholder?: string;
+  noResultsMessage?: string;
+  toggleLabel?: string;
 }) {
   const id = useId();
   const [query, setQuery] = useState('');
@@ -60,7 +66,7 @@ export default function SearchMultiSelect({
             id={id}
             className="ui-input !pl-3 !pr-9"
             autoComplete="off"
-            placeholder="Any"
+            placeholder={placeholder}
             aria-label={label}
             displayValue={(values: string[]) => {
               const labels = values.map(
@@ -78,7 +84,9 @@ export default function SearchMultiSelect({
           />
           <ComboboxButton
             className="ui-search-select-toggle"
-            aria-label={`Choose ${label.toLowerCase()}`}
+            aria-label={
+              toggleLabel || `Choose ${label.toLowerCase()}`
+            }
           >
             <Icon
               name="ChevronDown"
@@ -116,7 +124,7 @@ export default function SearchMultiSelect({
               className="ui-search-select-empty"
               role="status"
             >
-              No matching options.
+              {noResultsMessage}
             </p>
           )}
         </ComboboxOptions>
