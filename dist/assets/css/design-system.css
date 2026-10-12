@@ -3564,3 +3564,32 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .ui-skeleton, .ui-update-progress::after { animation: none; }
 }
+
+/* Shared notification inbox for agency, client and model workspaces. */
+.ui-notification-inbox { display: grid; gap: 24px; min-width: 0; }
+.ui-notification-list { margin: 0; padding: 0; list-style: none; }
+.ui-notification-row { display: flex; gap: 16px; padding: 24px; border-bottom: 1px solid #ececec; background: #fff; }
+.ui-notification-row:last-child { border-bottom: 0; }
+.ui-notification-row[data-unread='true'] { background: #fafafa; }
+.ui-notification-event-icon { width: 40px; height: 40px; flex: 0 0 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #e7e7e7; border-radius: 12px; background: white; color: #393939; }
+.ui-notification-copy { flex: 1; min-width: 0; }
+.ui-notification-title { display: block; color: #171717; font-size: 14px; font-weight: 600; line-height: 1.6; overflow-wrap: anywhere; }
+.ui-notification-title:hover { text-decoration: underline; text-underline-offset: 3px; }
+.ui-notification-description { margin: 5px 0 0; color: #666; font-size: 13px; line-height: 1.7; white-space: pre-line; overflow-wrap: anywhere; }
+.ui-notification-meta { margin-top: 7px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; color: #777; font-size: 11px; }
+.ui-notification-row-actions { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 12px; }
+.ui-notification-row-actions button, .ui-notification-row-actions a, .ui-notification-heading button { background: none; border: 0; padding: 0; color: #555; font-size: 12px; font-weight: 500; cursor: pointer; }
+.ui-notification-row-actions button:hover, .ui-notification-row-actions a:hover, .ui-notification-heading button:hover { color: #000; text-decoration: underline; text-underline-offset: 3px; }
+.ui-notification-row-actions button:disabled, .ui-notification-heading button:disabled { opacity: .45; cursor: wait; }
+.ui-notification-unread-dot { flex: 0 0 6px; width: 6px; height: 6px; margin-top: 9px; border-radius: 50%; background: #171717; }
+.ui-notification-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px; border-bottom: 1px solid #ececec; }
+.ui-notification-heading h2 { font-size: 14px; font-weight: 600; }
+.ui-notification-heading p { color: #777; font-size: 11px; margin-top: 4px; }
+.ui-notification-heading button { max-width: 130px; text-align: right; }
+.ui-notification-footer { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 18px; border-top: 1px solid #ececec; font-size: 13px; font-weight: 500; background: white; }
+.ui-notification-footer:hover { background: #fafafa; }
+.ui-notification-notice, .ui-notification-load { padding: 20px; }
+.ui-notification-load { display: flex; justify-content: center; border-top: 1px solid #ececec; }
+.ui-notification-menu .ui-notification-row { padding: 18px 20px; gap: 12px; }
+.ui-notification-menu .ui-notification-event-icon { width: 34px; height: 34px; flex-basis: 34px; border-radius: 10px; }
+@media (max-width: 640px) { .ui-notification-row { padding: 18px 16px; gap: 12px; } .ui-notification-event-icon { width: 34px; height: 34px; flex-basis: 34px; } }

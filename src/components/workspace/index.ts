@@ -87,3 +87,4 @@ export {
   type RequestClientContract,
 } from '../request-files/RequestContracts';
 export { default as FileDownloadButton } from '../request-files/FileDownloadButton';
+export { NotificationBell, NotificationInbox, type NotificationProps } from '../notifications/Notifications';
