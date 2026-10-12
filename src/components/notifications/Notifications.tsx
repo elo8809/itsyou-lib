@@ -87,7 +87,14 @@ function eventIcon(kind: string): IconType {
   if (kind.startsWith('ORDER_REVIEW_')) return 'Star';
   if (kind.includes('CONTRACT') || kind === 'MODEL_SIGNED')
     return 'FileCheck';
-  if (kind === 'RESOURCE_AVAILABLE') return 'File';
+  if (
+    kind === 'RESOURCE_AVAILABLE' ||
+    kind === 'INVOICE_READY' ||
+    kind === 'COST_ESTIMATE_READY'
+  )
+    return 'File';
+  if (kind === 'CONTACT_MESSAGE') return 'Inbox';
+  if (kind === 'APPLICATION') return 'UserCard';
   if (
     kind.startsWith('PROFILE_') ||
     kind.startsWith('MODEL_')
