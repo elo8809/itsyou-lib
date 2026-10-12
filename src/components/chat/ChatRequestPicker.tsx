@@ -11,12 +11,15 @@ export default function ChatRequestPicker({
   value,
   onChange,
   disabled,
+  chatId,
   labels: t,
 }: {
   api: ChatApi;
   value: ChatRequest | null;
   onChange: (request: ChatRequest | null) => void;
   disabled?: boolean;
+  /** The chat being edited; its own request stays selectable. */
+  chatId?: string;
   labels: ChatLabels;
 }) {
   const id = useId();
@@ -126,19 +129,26 @@ export default function ChatRequestPicker({
               <strong>{t.general}</strong>
               <small>{t.noRequest}</small>
             </button>
-            {items.map((item) => (
-              <button
-                type="button"
-                key={item.id}
-                className="ui-chat-request-option"
-                disabled={disabled}
-                aria-pressed={value?.id === item.id}
-                onClick={() => choose(item)}
-              >
-                <strong>{item.project}</strong>
-                <small>{item.client.name}</small>
-              </button>
-            ))}
+            {items.map((item) => {
+              // one group chat per request
+              const taken = !!item.chatId && item.chatId !== chatId;
+              return (
+                <button
+                  type="button"
+                  key={item.id}
+                  className="ui-chat-request-option"
+                  disabled={disabled || taken}
+                  aria-pressed={value?.id === item.id}
+                  onClick={() => choose(item)}
+                >
+                  <strong>{item.project}</strong>
+                  <small>
+                    {item.client.name}
+                    {taken && ` · ${t.requestHasChat}`}
+                  </small>
+                </button>
+              );
+            })}
             {loading && (
               <p className="ui-chat-help" role="status">
                 {t.loading}

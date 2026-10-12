@@ -65,6 +65,8 @@ export type ChatRequest = {
   id: string;
   project: string;
   client: { id: string; name: string };
+  /** Set in the request directory when the request already has a group chat. */
+  chatId?: string | null;
 };
 export type ChatGrouping = 'client' | 'none';
 

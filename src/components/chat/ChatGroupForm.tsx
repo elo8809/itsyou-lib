@@ -205,6 +205,7 @@ export default function ChatGroupForm({
           value={request}
           onChange={setRequest}
           disabled={busy}
+          chatId={chat?.id}
           labels={t}
         />
       )}

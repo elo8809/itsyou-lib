@@ -5,7 +5,7 @@ import {
   EmptyState,
   InlineNotice,
 } from '../workspace/Feedback';
-import { createChatApi } from './api';
+import { ChatApiError, createChatApi } from './api';
 import ChatGroupForm from './ChatGroupForm';
 import { chatLabels } from './labels';
 import type {
@@ -21,12 +21,15 @@ export default function ChatCreatePage({
   locale = 'en',
   onCancel,
   onCreated,
+  onOpenChat,
 }: {
   apiBaseUrl: string;
   clientRequestId: string;
   locale?: ChatLocale;
   onCancel: () => void;
   onCreated: (chat: ChatDetail) => void;
+  /** Opens the request's existing group chat. */
+  onOpenChat: (chatId: string) => void;
 }) {
   const api = useMemo(
     () => createChatApi(apiBaseUrl),
@@ -37,18 +40,26 @@ export default function ChatCreatePage({
     null,
   );
   const [error, setError] = useState(false);
+  const [existingChatId, setExistingChatId] = useState<string | null>(
+    null,
+  );
   const [retry, setRetry] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
     setData(null);
     setError(false);
+    setExistingChatId(null);
     api
       .requestDraft(clientRequestId, controller.signal)
       .then((result) => {
         if (!controller.signal.aborted) setData(result);
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((err) => {
+        if (controller.signal.aborted) return;
+        const existing =
+          err instanceof ChatApiError && err.details.existingChatId;
+        if (typeof existing === 'string') setExistingChatId(existing);
+        else setError(true);
       });
     return () => controller.abort();
   }, [api, clientRequestId, retry]);
@@ -60,7 +71,18 @@ export default function ChatCreatePage({
         onBack={onCancel}
         backLabel={t.request}
       />
-      {error ? (
+      {existingChatId ? (
+        <EmptyState
+          icon="Chat"
+          title={t.existingChatTitle}
+          description={t.existingChatDescription}
+          action={
+            <Button onClick={() => onOpenChat(existingChatId)}>
+              {t.openChat}
+            </Button>
+          }
+        />
+      ) : error ? (
         <EmptyState
           title={t.error}
           action={

@@ -25,6 +25,10 @@ export declare const chatLabels: {
         changeRequest: string;
         searchRequests: string;
         noRequests: string;
+        requestHasChat: string;
+        existingChatTitle: string;
+        existingChatDescription: string;
+        openChat: string;
         requestHint: string;
         all: string;
         unread: string;
@@ -121,6 +125,10 @@ export declare const chatLabels: {
         changeRequest: string;
         searchRequests: string;
         noRequests: string;
+        requestHasChat: string;
+        existingChatTitle: string;
+        existingChatDescription: string;
+        openChat: string;
         requestHint: string;
         all: string;
         unread: string;

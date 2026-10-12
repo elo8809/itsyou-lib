@@ -1,7 +1,11 @@
 import type { ChatDetail, ChatDraft, ChatMessage, ChatPerson, ChatRequest, ChatRequestDraft, ChatSummary, ChatViewer } from './types';
 export declare class ChatApiError extends Error {
     status: number;
-    constructor(message: string, status: number);
+    /** e.g. `existingChatId` when a request already has a group chat */
+    details: Record<string, unknown>;
+    constructor(message: string, status: number, 
+    /** e.g. `existingChatId` when a request already has a group chat */
+    details?: Record<string, unknown>);
 }
 export declare function createChatApi(baseUrl: string): {
     list: (q: string, cursor?: string, signal?: AbortSignal, clientRequestId?: string, archived?: boolean) => Promise<{

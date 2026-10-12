@@ -13,6 +13,8 @@ export class ChatApiError extends Error {
   constructor(
     message: string,
     public status: number,
+    /** e.g. `existingChatId` when a request already has a group chat */
+    public details: Record<string, unknown> = {},
   ) {
     super(message);
   }
@@ -53,6 +55,7 @@ export function createChatApi(baseUrl: string) {
         data?.message ||
           'Unable to load chat. Please try again.',
         response.status,
+        data || {},
       );
     }
     return response.json();

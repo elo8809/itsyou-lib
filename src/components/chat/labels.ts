@@ -34,6 +34,11 @@ export const chatLabels = {
     changeRequest: 'Change request',
     searchRequests: 'Search requests or clients',
     noRequests: 'No matching requests',
+    requestHasChat: 'Already has a group chat',
+    existingChatTitle: 'This request already has a group chat',
+    existingChatDescription:
+      'Each request has one group chat. Open it to continue the conversation or change its participants.',
+    openChat: 'Open group chat',
     requestHint:
       'Link this conversation to a request and its client.',
     all: 'All',
@@ -159,6 +164,11 @@ export const chatLabels = {
     changeRequest: 'Anfrage ändern',
     searchRequests: 'Anfragen oder Kunden suchen',
     noRequests: 'Keine passenden Anfragen',
+    requestHasChat: 'Hat bereits einen Gruppenchat',
+    existingChatTitle: 'Diese Anfrage hat bereits einen Gruppenchat',
+    existingChatDescription:
+      'Jede Anfrage hat einen Gruppenchat. Öffne ihn, um weiterzuschreiben oder die Teilnehmenden zu ändern.',
+    openChat: 'Gruppenchat öffnen',
     requestHint:
       'Verknüpfe diesen Chat mit einer Anfrage und ihrem Kunden.',
     all: 'Alle',
