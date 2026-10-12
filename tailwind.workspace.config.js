@@ -1,0 +1,45 @@
+// The palette lives in assets/css/design-system.css, including opacity support.
+const gray = Object.fromEntries(
+  [
+    50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
+  ].map((shade) => [
+    shade,
+    `rgb(var(--ui-gray-${shade}) / <alpha-value>)`,
+  ]),
+);
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: 'rgb(var(--ui-primary) / <alpha-value>)',
+        secondary:
+          'rgb(var(--ui-secondary) / <alpha-value>)',
+        dark: gray[950],
+        light: gray[200],
+        salt: 'rgb(var(--ui-canvas) / <alpha-value>)',
+        gray,
+        blue: gray,
+        green: gray,
+        red: gray,
+        orange: gray,
+        purple: gray,
+        yellow: gray,
+        amber: gray,
+        emerald: gray,
+        success: { 100: gray[100], 500: gray[800] },
+        warning: { 400: gray[500] },
+      },
+      fontFamily: {
+        sans: 'var(--ui-font-sans)',
+        poppins: 'Poppins',
+        tommy: 'Tommy',
+        tommyOutline: 'Tommy Outline',
+      },
+      fontSize: { '5xl': '2.8rem' },
+      maxWidth: { '8xl': '96rem' },
+      borderWidth: { 3: '3px' },
+      lineHeight: { 11: '3.4rem' },
+    },
+  },
+  safelist: [{ pattern: /grid-cols-[0-9]/ }],
+};

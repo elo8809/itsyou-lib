@@ -128,6 +128,7 @@ export const GENDERS = [
 export const JOB_TYPES = [
   { label: 'Model', id: 'Model' },
   { label: 'Hostess', id: 'Hostess' },
+  { label: 'Promoter', id: 'Promoter' },
 ];
 
 export const LOCATIONS = [

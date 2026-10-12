@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/react';
 import '../src/assets/css/tailwind.css';
 import '../src/assets/css/globals.css';
 import '../src/assets/css/stories.css';
+import '../src/assets/css/design-system.css';
 
 const preview: Preview = {
   parameters: {

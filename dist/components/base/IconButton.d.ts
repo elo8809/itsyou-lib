@@ -1,15 +1,15 @@
-import { HTMLAttributeAnchorTarget, MouseEventHandler } from 'react';
+import { ButtonHTMLAttributes, MouseEventHandler } from 'react';
 import { IconType } from './Icon';
-declare const IconButton: ({ onClick, icon, isLoading, href, target, disabled, className, size, iconClassName, loaderColor, }: {
-    onClick?: MouseEventHandler<HTMLDivElement>;
-    isLoading?: boolean;
+interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
+    onClick?: MouseEventHandler<any>;
     icon: IconType;
-    href?: HTMLAttributeAnchorTarget;
+    isLoading?: boolean;
+    href?: string;
     target?: string;
-    disabled?: boolean;
-    className?: string;
+    rel?: string;
     iconClassName?: string;
     size?: number;
-    loaderColor?: "light" | "dark";
-}) => import("react/jsx-runtime").JSX.Element;
-export default IconButton;
+    loaderColor?: 'light' | 'dark';
+}
+export default function IconButton({ onClick, icon, isLoading, href, target, rel, disabled, className, size, iconClassName, loaderColor, title, ...rest }: IconButtonProps): import("react/jsx-runtime").JSX.Element;
+export {};

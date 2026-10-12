@@ -3,7 +3,17 @@ import { Tab } from '@headlessui/react';
 import classNames from 'classnames/dedupe';
 
 interface Props {
-  items: { name: string; panel: ReactNode }[];
+  items: {
+    name: string;
+    panel: ReactNode;
+    count?: number;
+  }[];
+  variant?: 'segmented' | 'underline';
+  label?: string;
+  selectedIndex?: number;
+  onChange?: (index: number) => void;
+  /** Preserve forms and drafts while switching between panels. */
+  keepMounted?: boolean;
   listClassName?: string;
   wrapperClassName?: string;
   listWrapperClassName?: string;
@@ -18,24 +28,39 @@ export default function Tabs({
   listWrapperClassName,
   selectedClassName,
   wrapperClassName,
+  variant = 'segmented',
+  label,
+  selectedIndex,
+  onChange,
+  keepMounted = false,
 }: Props) {
+  const underline = variant === 'underline';
   return (
     <Tab.Group
+      selectedIndex={selectedIndex}
+      onChange={onChange}
       className={classNames(
         wrapperClassName,
-        'flex flex-col items-center space-y-6',
+        underline
+          ? 'ui-content-tabs'
+          : 'flex flex-col items-center space-y-6',
       )}
     >
       <div
         className={classNames(
           listWrapperClassName,
-          'w-full flex justify-center',
+          underline
+            ? 'ui-content-tabs-scroll'
+            : 'w-full flex justify-center',
         )}
       >
         <Tab.List
+          aria-label={label}
           className={classNames(
             listClassName,
-            'flex rounded-xl bg-gray-100 p-1 w-full max-w-md overflow-x-auto no-scrollbar',
+            underline
+              ? 'ui-content-tabs-list'
+              : 'flex rounded-xl bg-gray-100 p-1 w-full max-w-md overflow-x-auto no-scrollbar',
           )}
         >
           {items.map((item) => (
@@ -44,24 +69,34 @@ export default function Tabs({
               className={({ selected }) =>
                 classNames(
                   buttonClassName,
-                  'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
+                  underline
+                    ? 'ui-content-tab'
+                    : 'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
                   selected
                     ? [
-                        'bg-white text-gray-900 shadow',
+                        !underline &&
+                          'bg-white text-gray-900 shadow',
                         selectedClassName,
                       ]
-                    : 'hover:bg-white/[0.12]',
+                    : !underline && 'hover:bg-white/[0.12]',
                 )
               }
             >
               {item.name}
+              {item.count !== undefined && (
+                <span className="ui-content-tab-count">
+                  {item.count}
+                </span>
+              )}
             </Tab>
           ))}
         </Tab.List>
       </div>
       <Tab.Panels className="w-full">
         {items.map((item, idx) => (
-          <Tab.Panel key={idx}>{item.panel}</Tab.Panel>
+          <Tab.Panel key={idx} unmount={!keepMounted}>
+            {item.panel}
+          </Tab.Panel>
         ))}
       </Tab.Panels>
     </Tab.Group>

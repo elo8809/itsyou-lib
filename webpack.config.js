@@ -1,5 +1,13 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const {
+  dependencies,
+  peerDependencies,
+} = require('./package.json');
+const externalPackages = new Set([
+  ...Object.keys(dependencies),
+  ...Object.keys(peerDependencies),
+]);
 
 module.exports = {
   mode: 'production',
@@ -45,14 +53,32 @@ module.exports = {
       },
     ],
   },
-  externals: {
-    react: 'react',
-    'react-dom': 'react-dom',
-  },
+  // Consumers supply React, Next routing and other runtimes; never bundle a second instance.
+  externals: [
+    ({ request }, callback) => {
+      const name = request?.startsWith('@')
+        ? request.split('/').slice(0, 2).join('/')
+        : request?.split('/')[0];
+      if (
+        externalPackages.has(name) &&
+        !request.endsWith('.css')
+      )
+        return callback(null, 'commonjs ' + request);
+      callback();
+    },
+  ],
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/assets', to: 'assets' },
+        {
+          from: 'tailwind.workspace.config.js',
+          to: 'tailwind.workspace.config.js',
+        },
+        {
+          from: 'tailwind.workspace.config.d.ts',
+          to: 'tailwind.workspace.config.d.ts',
+        },
         {
           from: 'tailwind.base.config.ts',
           to: 'tailwind.base.config.ts',

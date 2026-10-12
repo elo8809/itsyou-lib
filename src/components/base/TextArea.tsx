@@ -1,16 +1,16 @@
 import React, {
   forwardRef,
-  InputHTMLAttributes,
+  useId,
+  TextareaHTMLAttributes,
   PropsWithChildren,
 } from 'react';
 import { Textarea as TextareaUi } from '@headlessui/react';
 import classNames from 'classnames/dedupe';
 import InputWrapper from './InputWrapper';
 
-export interface TextAreaProps
-  extends PropsWithChildren<
-    InputHTMLAttributes<HTMLTextAreaElement>
-  > {
+export interface TextAreaProps extends PropsWithChildren<
+  TextareaHTMLAttributes<HTMLTextAreaElement>
+> {
   label?: string;
   error?: string;
   wrapperClassName?: string;
@@ -22,22 +22,32 @@ const TextArea_ = (
     error,
     label,
     className,
+    id,
     ...rest
   }: TextAreaProps,
   ref: any,
 ) => {
+  const generatedId = useId();
+  const inputId = id || generatedId;
   return (
     <InputWrapper
       className={wrapperClassName}
       label={label}
-      hideError={true}
+      htmlFor={inputId}
+      error={error}
+      errorId={`${inputId}-error`}
     >
       <TextareaUi
         ref={ref}
+        id={inputId}
+        aria-invalid={!!error}
+        aria-describedby={
+          error ? `${inputId}-error` : undefined
+        }
         {...rest}
         className={classNames(
           className,
-          'border-2 min-h-12 w-full rounded-sm p-1.5 shadow-sm text-primary',
+          'ui-input min-h-24 w-full rounded-md p-3',
         )}
       />
     </InputWrapper>

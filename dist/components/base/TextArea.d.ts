@@ -1,5 +1,5 @@
-import React, { InputHTMLAttributes, PropsWithChildren } from 'react';
-export interface TextAreaProps extends PropsWithChildren<InputHTMLAttributes<HTMLTextAreaElement>> {
+import React, { TextareaHTMLAttributes, PropsWithChildren } from 'react';
+export interface TextAreaProps extends PropsWithChildren<TextareaHTMLAttributes<HTMLTextAreaElement>> {
     label?: string;
     error?: string;
     wrapperClassName?: string;

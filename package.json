@@ -1,6 +1,6 @@
 {
   "name": "@itsyouagency/ui",
-  "version": "1.46.0",
+  "version": "1.47.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,12 +14,13 @@
     "dist/assets"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "pnpm run build && node --test tests/*.test.cjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "build": "webpack --config webpack.config.js",
     "prepublishOnly": "pnpm run build",
-    "pub": "npm publish --access public"
+    "pub": "npm publish --access public",
+    "dev": "webpack --config webpack.config.js --watch"
   },
   "keywords": [],
   "author": "Husein Fakhir",
@@ -67,6 +68,7 @@
     "@tanstack/react-table": "^8.20.6",
     "@tanstack/table-core": "^8.21.2",
     "classnames": "^2.5.1",
+    "dompurify": "^3.4.16",
     "moment": "^2.30.1",
     "next": "15.0.7",
     "react": "19.0.0-rc-66855b96-20241106",

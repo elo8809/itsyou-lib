@@ -1,0 +1,32 @@
+import type { NavEntry, TDashboardNav } from '../base/DashboardNav';
+export type WorkspaceNav = TDashboardNav;
+export type WorkspaceRoute = NavEntry & {
+    group: string;
+};
+export declare const isActiveRoute: (path: string, href: string) => boolean;
+export declare function flattenNavigation(nav: WorkspaceNav): WorkspaceRoute[];
+export declare function findActiveRoute(nav: WorkspaceNav, path: string): WorkspaceRoute;
+export declare const workspaceLabels: {
+    navigation: string;
+    openNavigation: string;
+    closeNavigation: string;
+    skipToContent: string;
+    breadcrumb: string;
+    workspace: string;
+    overview: string;
+    details: string;
+    search: string;
+    jumpTo: string;
+    searchTitle: string;
+    searchInput: string;
+    searchPlaceholder: string;
+    closeSearch: string;
+    pages: string;
+    noResults: string;
+    navigate: string;
+    open: string;
+    close: string;
+    account: string;
+    signOut: string;
+};
+export type WorkspaceLabels = typeof workspaceLabels;

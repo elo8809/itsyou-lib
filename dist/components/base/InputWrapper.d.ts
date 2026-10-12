@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
-declare const InputWrapper: ({ label, children, className, error, hideError, info, toolTipWrapperClassName, toolTipHeaderClassName, toolTipContentClassName, }: {
+declare const InputWrapper: ({ label, htmlFor, errorId, children, className, error, hideError, info, toolTipWrapperClassName, toolTipHeaderClassName, toolTipContentClassName, }: {
     children: ReactNode;
     label?: string;
+    htmlFor?: string;
+    errorId?: string;
     className?: string;
     error?: string;
     hideError?: boolean;
