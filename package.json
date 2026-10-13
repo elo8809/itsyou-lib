@@ -21,7 +21,7 @@
     "prepublishOnly": "pnpm run build",
     "pub": "npm publish --access public",
     "dev": "webpack --config webpack.config.js --watch",
-    "test:confirmations": "pnpm run build"
+    "test:confirmations": "pnpm run build && node tests/confirmations.browser.cjs"
   },
   "keywords": [],
   "author": "Husein Fakhir",
