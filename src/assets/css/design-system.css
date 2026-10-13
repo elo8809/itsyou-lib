@@ -3304,7 +3304,7 @@ label.ui-chat-person-option:hover {
   }
 }
 
-/* Conversation hierarchy: client → request in admin, request in other portals. */
+/* Collapsible conversation categories across the portals. */
 .ui-chat-conversation-group {
   margin: 4px 0 9px;
 }
@@ -3337,14 +3337,14 @@ label.ui-chat-person-option:hover {
 .ui-chat-group-collapsed {
   transform: rotate(-90deg);
 }
-.ui-chat-conversation-group[data-kind='client']
+.ui-chat-conversation-group
   > .ui-chat-group-heading {
   color: #363642;
   font-size: 11px;
   font-weight: 600;
   background: #f6f6f8;
 }
-.ui-chat-conversation-group[data-kind='client']
+.ui-chat-conversation-group
   > .ui-chat-group-content {
   margin: 4px 0 0 12px;
   border-left: 1px solid #ededf2;

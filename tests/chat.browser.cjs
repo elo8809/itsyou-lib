@@ -418,10 +418,10 @@ function fixture(viewerRole = 'ADMIN') {
     assert.equal(
       await page
         .locator(
-          '.ui-chat-conversation-group[data-kind="client"]',
+          '.ui-chat-conversation-group[data-kind="project"]',
         )
         .count(),
-      2,
+      1,
     );
     assert.equal(
       await page
@@ -437,30 +437,24 @@ function fixture(viewerRole = 'ADMIN') {
           '.ui-chat-conversation-group[data-kind="general"]',
         )
         .count(),
-      1,
+      0,
     );
-    const north = page
-      .locator(
-        '.ui-chat-conversation-group[data-kind="client"]',
-      )
-      .filter({
-        has: page.locator('.ui-chat-group-heading > span', {
-          hasText: 'Studio Nord',
-        }),
-      });
-    assert.equal(
-      await north.locator('.ui-chat-list-item').count(),
-      2,
+    const projects = page.locator(
+      '.ui-chat-conversation-group[data-kind="project"]',
     );
-    await north.locator('> .ui-chat-group-heading').click();
     assert.equal(
-      await north
+      await projects.locator('.ui-chat-list-item').count(),
+      4,
+    );
+    await projects.locator('> .ui-chat-group-heading').click();
+    assert.equal(
+      await projects
         .locator('.ui-chat-list-item')
         .first()
         .isVisible(),
       false,
     );
-    await north.locator('> .ui-chat-group-heading').click();
+    await projects.locator('> .ui-chat-group-heading').click();
     const composer = page.getByRole('textbox', {
       name: 'Message',
       exact: true,
@@ -829,7 +823,7 @@ function fixture(viewerRole = 'ADMIN') {
       await clientPage
         .locator('.ui-chat-conversation-group')
         .count(),
-      0,
+      1,
     );
     await clientPage
       .getByRole('textbox', {
@@ -982,7 +976,7 @@ function fixture(viewerRole = 'ADMIN') {
       await modelPage
         .locator('.ui-chat-conversation-group')
         .count(),
-      0,
+      1,
     );
     assert.equal(
       await modelPage
@@ -994,7 +988,7 @@ function fixture(viewerRole = 'ADMIN') {
     );
     assert.equal(errors.length, 0, errors.join('\n'));
     console.log(
-      `Browser checks passed: admin client grouping, flat client/model lists, request prefill and embedded request messaging, group creation/editing, role controls, safe text rendering, send/retry, keyboard composer, client messaging, mobile navigation. Screenshots: ${output}`,
+      `Browser checks passed: project grouping across portals, request prefill and embedded request messaging, group creation/editing, role controls, safe text rendering, send/retry, keyboard composer, client messaging, mobile navigation. Screenshots: ${output}`,
     );
   } finally {
     await browser.close();

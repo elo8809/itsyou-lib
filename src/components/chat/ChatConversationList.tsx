@@ -4,26 +4,32 @@ import {
   useId,
   useState,
 } from 'react';
-import Icon from '../base/Icon';
+import Icon, { IconType } from '../base/Icon';
 import type {
   ChatGrouping,
   ChatLocale,
   ChatSummary,
 } from './types';
 import type { ChatLabels } from './labels';
-import { groupConversations } from './grouping';
+import {
+  ChatCategory,
+  groupConversations,
+  groupConversationsByCategory,
+} from './grouping';
 import { roleLabel } from './utils';
 
 function Group({
   label,
   kind,
+  icon,
   children,
   chats,
   selected,
   search,
 }: {
   label: string;
-  kind: 'client' | 'general';
+  kind: 'client' | ChatCategory;
+  icon: IconType;
   children: ReactNode;
   chats: ChatSummary[];
   selected?: string;
@@ -60,10 +66,7 @@ function Group({
             expanded ? '' : 'ui-chat-group-collapsed'
           }
         />
-        <Icon
-          name={kind === 'client' ? 'Company' : 'Chat'}
-          size={15}
-        />
+        <Icon name={icon} size={15} />
         <span title={label}>{label}</span>
         {unread > 0 && (
           <span className="ui-chat-count">
@@ -99,6 +102,40 @@ export default function ChatConversationList({
   labels: ChatLabels;
   search: string;
 }) {
+  const categoryLabels: Record<ChatCategory, string> = {
+    project: t.projectChats,
+    'general-client': t.generalClientChats,
+    'general-model': t.generalModelChats,
+    general: t.generalChats,
+  };
+  const categoryIcons: Record<ChatCategory, IconType> = {
+    project: 'File',
+    'general-client': 'Company',
+    'general-model': 'Users',
+    general: 'Chat',
+  };
+  const groups =
+    grouping === 'category' || grouping === 'kind'
+      ? groupConversationsByCategory(chats, grouping).map(
+          (group) => ({
+            ...group,
+            label: categoryLabels[group.id],
+            kind: group.id,
+            icon: categoryIcons[group.id],
+          }),
+        )
+      : grouping === 'client'
+        ? groupConversations(chats).map((group) => ({
+            ...group,
+            label: group.client?.name || t.general,
+            kind: group.client
+              ? ('client' as const)
+              : ('general' as const),
+            icon: group.client
+              ? ('Company' as const)
+              : ('Chat' as const),
+          }))
+        : [];
   function time(date: string) {
     const value = new Date(date);
     return value.toDateString() ===
@@ -178,11 +215,12 @@ export default function ChatConversationList({
     <>
       {grouping === 'none'
         ? chats.map(conversation)
-        : groupConversations(chats).map((group) => (
+        : groups.map((group) => (
             <Group
               key={group.id}
-              label={group.client?.name || t.general}
-              kind={group.client ? 'client' : 'general'}
+              label={group.label}
+              kind={group.kind}
+              icon={group.icon}
               chats={group.chats}
               selected={selected}
               search={search}

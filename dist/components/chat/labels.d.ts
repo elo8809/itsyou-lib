@@ -12,6 +12,10 @@ export declare const chatLabels: {
         search: string;
         request: string;
         general: string;
+        generalChats: string;
+        projectChats: string;
+        generalClientChats: string;
+        generalModelChats: string;
         generalChat: string;
         agencyTeam: string;
         generalHint: string;
@@ -112,6 +116,10 @@ export declare const chatLabels: {
         search: string;
         request: string;
         general: string;
+        generalChats: string;
+        projectChats: string;
+        generalClientChats: string;
+        generalModelChats: string;
         generalChat: string;
         agencyTeam: string;
         generalHint: string;

@@ -62,12 +62,6 @@ export default function DataRegion({
       ) : (
         children
       )}
-      <div
-        className="ui-update-progress"
-        style={{ margin: 0 }}
-        data-active={!!updating}
-        aria-hidden="true"
-      />
       {error && hasData && (
         <div className="ui-refresh-notice" role="status">
           <span>
