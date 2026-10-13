@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-export default function ActionDialog({ open, onClose, title, description, children, actions, busy, closeLabel, }: {
+export default function ActionDialog({ open, onClose, title, description, children, actions, busy, closeLabel, size, contentClassName, }: {
     open: boolean;
     onClose: () => void;
     title: ReactNode;
@@ -8,4 +8,6 @@ export default function ActionDialog({ open, onClose, title, description, childr
     actions?: ReactNode;
     busy?: boolean;
     closeLabel?: string;
+    size?: 'sm' | 'lg' | 'xl';
+    contentClassName?: string;
 }): import("react/jsx-runtime").JSX.Element;

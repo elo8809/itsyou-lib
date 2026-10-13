@@ -1,84 +1,47 @@
-import React, {
-  ButtonHTMLAttributes,
-  PropsWithChildren,
-  useState,
-} from 'react';
-import Button from './Button';
-import Modal from './Modal';
+import React, { useState } from 'react';
+import Button, { ButtonProps } from './Button';
+import { ConfirmDialog } from '../workspace/ConfirmDialog';
 
-interface Props
-  extends PropsWithChildren<
-    ButtonHTMLAttributes<HTMLButtonElement>
-  > {
-  isLoading?: boolean;
+interface Props extends ButtonProps {
   children?: string;
-  errors?: any;
-  className?: string;
-  styleType?: 'dark' | 'light';
-  Element?: any;
+  errors?: unknown;
+  Element?: React.ElementType;
   action?: string;
 }
 
+/** Compatibility adapter: existing actions use the shared confirmation flow. */
 const ButtonSubmit = ({
   children,
   onClick,
-  className,
-  styleType,
-  type,
   action,
   Element = Button,
+  type: _type,
+  errors: _errors,
   ...rest
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const handleClick = () => {
-    setIsOpen(true);
-  };
+  const label = action || children || 'Confirm';
   return (
     <>
       <Element
         {...rest}
-        type={'button'}
-        className={className}
-        styleType={styleType}
-        onClick={handleClick}
+        type="button"
+        onClick={() => setIsOpen(true)}
       >
         {children}
       </Element>
-      <Modal
-        name={'Confirmation'}
-        open={isOpen}
+      <ConfirmDialog
+        config={
+          isOpen
+            ? {
+                title: `${label}?`,
+                confirmLabel: label,
+                run: (event) => onClick?.(event),
+              }
+            : null
+        }
         onClose={() => setIsOpen(false)}
-        classes={{ content: 'space-y-10' }}
-      >
-        <p className={'text-xl text-center'}>
-          Are you sure you want to <br />{' '}
-          <strong className={'text-secondary'}>
-            {action || children}
-          </strong>
-          ?
-        </p>
-        <div className={'flex space-x-6 justify-center'}>
-          <Button
-            className={'sm:min-w-36'}
-            styleType={'dark'}
-            type={type || 'button'}
-            onClick={(e) => {
-              onClick?.(e);
-              setIsOpen(false);
-            }}
-          >
-            Yes
-          </Button>
-          <Button
-            className={'sm:min-w-36'}
-            type={'button'}
-            styleType={'light'}
-            onClick={() => setIsOpen(false)}
-          >
-            No
-          </Button>
-        </div>
-      </Modal>
+      />
     </>
   );
 };

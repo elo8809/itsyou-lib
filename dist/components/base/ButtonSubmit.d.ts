@@ -1,12 +1,11 @@
-import { ButtonHTMLAttributes, PropsWithChildren } from 'react';
-interface Props extends PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> {
-    isLoading?: boolean;
+import React from 'react';
+import { ButtonProps } from './Button';
+interface Props extends ButtonProps {
     children?: string;
-    errors?: any;
-    className?: string;
-    styleType?: 'dark' | 'light';
-    Element?: any;
+    errors?: unknown;
+    Element?: React.ElementType;
     action?: string;
 }
-declare const ButtonSubmit: ({ children, onClick, className, styleType, type, action, Element, ...rest }: Props) => import("react/jsx-runtime").JSX.Element;
+/** Compatibility adapter: existing actions use the shared confirmation flow. */
+declare const ButtonSubmit: ({ children, onClick, action, Element, type: _type, errors: _errors, ...rest }: Props) => import("react/jsx-runtime").JSX.Element;
 export default ButtonSubmit;

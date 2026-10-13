@@ -11,6 +11,15 @@ export interface WorkspaceLayoutProps {
         name: string;
         email?: string | null;
         role?: string;
+        viewAs?: {
+            label: string;
+            value: string;
+            options: {
+                value: string;
+                label: string;
+            }[];
+            onChange: (value: string) => void;
+        };
         onSignOut?: () => void;
     };
     workspaceName: string;

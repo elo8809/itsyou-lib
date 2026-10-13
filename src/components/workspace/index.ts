@@ -23,7 +23,10 @@ export {
   type PaginationProps,
 } from './Pagination';
 export { default as MetricCard } from './MetricCard';
-export { default as DataRegion, ListSkeleton } from './DataRegion';
+export {
+  default as DataRegion,
+  ListSkeleton,
+} from './DataRegion';
 export { default as Progress } from './Progress';
 export {
   Badge,
@@ -64,6 +67,13 @@ export {
   type ContactLabels,
 } from './ContactDetails';
 export { default as ActionDialog } from './ActionDialog';
+export {
+  ConfirmDialog,
+  ConfirmButton,
+  type ConfirmConfig,
+  type ConfirmDialogProps,
+  type ConfirmButtonProps,
+} from './ConfirmDialog';
 export { default as FormActions } from './FormActions';
 export { default as ChoiceChips } from './ChoiceChips';
 export {
@@ -94,4 +104,8 @@ export {
   type RequestClientContract,
 } from '../request-files/RequestContracts';
 export { default as FileDownloadButton } from '../request-files/FileDownloadButton';
-export { NotificationBell, NotificationInbox, type NotificationProps } from '../notifications/Notifications';
+export {
+  NotificationBell,
+  NotificationInbox,
+  type NotificationProps,
+} from '../notifications/Notifications';

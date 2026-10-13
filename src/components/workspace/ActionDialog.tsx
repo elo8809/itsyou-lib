@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import classNames from 'classnames/dedupe';
 import {
   Dialog,
   DialogBackdrop,
@@ -16,6 +17,8 @@ export default function ActionDialog({
   actions,
   busy,
   closeLabel = 'Close',
+  size = 'sm',
+  contentClassName,
 }: {
   open: boolean;
   onClose: () => void;
@@ -25,6 +28,8 @@ export default function ActionDialog({
   actions?: ReactNode;
   busy?: boolean;
   closeLabel?: string;
+  size?: 'sm' | 'lg' | 'xl';
+  contentClassName?: string;
 }) {
   return (
     <Dialog
@@ -36,7 +41,11 @@ export default function ActionDialog({
     >
       <DialogBackdrop className="ui-dialog-backdrop" />
       <div className="ui-action-dialog-container">
-        <DialogPanel className="ui-action-dialog-panel">
+        <DialogPanel
+          className="ui-action-dialog-panel"
+          data-size={size}
+          aria-busy={busy || undefined}
+        >
           <div className="ui-action-dialog-header">
             <div>
               <DialogTitle>{title}</DialogTitle>
@@ -57,7 +66,12 @@ export default function ActionDialog({
             </button>
           </div>
           {children && (
-            <div className="ui-action-dialog-content">
+            <div
+              className={classNames(
+                'ui-action-dialog-content',
+                contentClassName,
+              )}
+            >
               {children}
             </div>
           )}

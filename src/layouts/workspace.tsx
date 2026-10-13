@@ -1,4 +1,6 @@
 import {
+  ComponentPropsWithoutRef,
+  forwardRef,
   ReactNode,
   useEffect,
   useId,
@@ -26,6 +28,13 @@ import {
   WorkspaceLabels,
 } from '../components/workspace/navigation';
 
+const AccountViewOption = forwardRef<
+  HTMLButtonElement,
+  ComponentPropsWithoutRef<'button'>
+>(function AccountViewOption(props, ref) {
+  return <button {...props} ref={ref} role="menuitemradio" />;
+});
+
 export interface WorkspaceLayoutProps {
   children: ReactNode;
   nav: Navigation;
@@ -37,6 +46,12 @@ export interface WorkspaceLayoutProps {
     name: string;
     email?: string | null;
     role?: string;
+    viewAs?: {
+      label: string;
+      value: string;
+      options: { value: string; label: string }[];
+      onChange: (value: string) => void;
+    };
     onSignOut?: () => void;
   };
   workspaceName: string;
@@ -81,8 +96,13 @@ export default function WorkspaceLayout({
   const [searchOpen, setSearchOpen] = useState(false);
   const mainId = useId();
   const navigation = { ...nav };
-  for (const [group, items] of Object.entries(sidebarBottomNav)) {
-    navigation[group] = [...(navigation[group] || []), ...items];
+  for (const [group, items] of Object.entries(
+    sidebarBottomNav,
+  )) {
+    navigation[group] = [
+      ...(navigation[group] || []),
+      ...items,
+    ];
   }
   const selected = findActiveRoute(navigation, currentPath);
   const hasBottomNav = Object.values(sidebarBottomNav).some(
@@ -90,7 +110,8 @@ export default function WorkspaceLayout({
   );
   const showSidebarSignOut =
     sidebarSignOut && !!account?.onSignOut;
-  const showSidebarActions = hasBottomNav || showSidebarSignOut;
+  const showSidebarActions =
+    hasBottomNav || showSidebarSignOut;
   const sidebarClassName = showSidebarActions
     ? ' ui-sidebar--with-actions'
     : '';
@@ -301,6 +322,50 @@ export default function WorkspaceLayout({
                         <small>{account.role}</small>
                       )}
                     </div>
+                    {account.viewAs && (
+                      <div
+                        className="ui-account-views"
+                        role="group"
+                        aria-label={account.viewAs.label}
+                      >
+                        <p className="ui-account-views-label">
+                          {account.viewAs.label}
+                        </p>
+                        {account.viewAs.options.map(
+                          (option) => (
+                            <MenuItem
+                              key={option.value}
+                              as={AccountViewOption}
+                              type="button"
+                              aria-checked={
+                                account.viewAs?.value ===
+                                option.value
+                              }
+                              className="ui-account-view-option"
+                              onClick={() =>
+                                account.viewAs?.onChange(
+                                  option.value,
+                                )
+                              }
+                            >
+                              {option.label}
+                              <span
+                                className="ui-account-view-check"
+                                aria-hidden="true"
+                              >
+                                {account.viewAs?.value ===
+                                  option.value && (
+                                  <Icon
+                                    name="Success"
+                                    size={13}
+                                  />
+                                )}
+                              </span>
+                            </MenuItem>
+                          ),
+                        )}
+                      </div>
+                    )}
                     {account.onSignOut && (
                       <MenuItem>
                         <button

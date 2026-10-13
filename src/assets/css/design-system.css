@@ -326,6 +326,39 @@
 .ui-account-menu button[data-focus] {
   background: rgb(var(--ui-gray-100));
 }
+.ui-account-views {
+  border-top: 1px solid rgb(var(--ui-gray-100));
+  padding: 8px 0;
+}
+.ui-account-views-label {
+  padding: 0 12px 5px;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgb(var(--ui-gray-500));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.ui-account-menu .ui-account-view-option {
+  border-top: 0;
+  gap: 12px;
+}
+.ui-account-view-option[aria-checked='true'] {
+  color: rgb(var(--ui-gray-900));
+  font-weight: 600;
+}
+.ui-account-view-check {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgb(var(--ui-gray-300));
+  border-radius: 50%;
+}
+.ui-account-view-option[aria-checked='true'] .ui-account-view-check {
+  background: rgb(var(--ui-gray-900));
+  border-color: rgb(var(--ui-gray-900));
+  color: var(--ui-white);
+}
 .ui-content {
   flex: 1;
   width: 100%;
@@ -2266,7 +2299,7 @@
   inset: 0;
   overflow-y: auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 20px;
 }
@@ -2274,6 +2307,7 @@
   position: relative;
   width: 100%;
   max-width: 480px;
+  margin-block: auto;
   background: var(--ui-white);
   border: 1px solid rgb(var(--ui-gray-200));
   border-radius: var(--ui-radius-lg);
@@ -2281,12 +2315,18 @@
   font-family: var(--ui-font-sans);
   color: rgb(var(--ui-gray-900));
 }
+.ui-action-dialog-panel[data-size='lg'] {
+  max-width: 768px;
+}
+.ui-action-dialog-panel[data-size='xl'] {
+  max-width: 1280px;
+}
 .ui-action-dialog-header {
   display: flex;
   gap: 16px;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 24px 24px 0;
+  padding: 24px;
 }
 .ui-action-dialog-header h2 {
   font-size: 18px;
@@ -2300,7 +2340,7 @@
   line-height: 1.8;
 }
 .ui-action-dialog-content {
-  padding: 20px 24px 24px;
+  padding: 0 24px 24px;
   font-size: 13px;
 }
 .ui-action-dialog-actions {

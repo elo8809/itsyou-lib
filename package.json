@@ -1,6 +1,6 @@
 {
   "name": "@itsyouagency/ui",
-  "version": "1.51.0",
+  "version": "1.52.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,8 @@
     "build": "webpack --config webpack.config.js",
     "prepublishOnly": "pnpm run build",
     "pub": "npm publish --access public",
-    "dev": "webpack --config webpack.config.js --watch"
+    "dev": "webpack --config webpack.config.js --watch",
+    "test:confirmations": "pnpm run build"
   },
   "keywords": [],
   "author": "Husein Fakhir",
