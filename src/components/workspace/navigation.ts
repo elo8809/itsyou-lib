@@ -40,6 +40,7 @@ export function findActiveRoute(
 }
 export const workspaceLabels = {
   navigation: 'Main navigation',
+  attention: 'needing attention',
   secondaryNavigation: 'More pages',
   openNavigation: 'Open navigation',
   closeNavigation: 'Close navigation',
@@ -60,6 +61,7 @@ export const workspaceLabels = {
   open: 'to open',
   close: 'to close',
   account: 'Account menu',
+  settings: 'Settings',
   signOut: 'Sign out',
 };
 export type WorkspaceLabels = typeof workspaceLabels;

@@ -8,6 +8,7 @@ export declare function flattenNavigation(nav: WorkspaceNav): WorkspaceRoute[];
 export declare function findActiveRoute(nav: WorkspaceNav, path: string): WorkspaceRoute;
 export declare const workspaceLabels: {
     navigation: string;
+    attention: string;
     secondaryNavigation: string;
     openNavigation: string;
     closeNavigation: string;
@@ -28,6 +29,7 @@ export declare const workspaceLabels: {
     open: string;
     close: string;
     account: string;
+    settings: string;
     signOut: string;
 };
 export type WorkspaceLabels = typeof workspaceLabels;

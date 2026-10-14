@@ -1,4 +1,5 @@
 export { default as WorkspaceNav } from './WorkspaceNav';
+export { default as AccountSettings } from '../account/AccountSettings';
 export { default as NotificationMenu, type NotificationMenuProps, } from './NotificationMenu';
 export { default as CommandMenu } from './CommandMenu';
 export { default as PageHeader } from './PageHeader';

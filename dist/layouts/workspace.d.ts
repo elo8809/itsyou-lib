@@ -1,8 +1,10 @@
 import { ReactNode } from 'react';
+import { type WorkspaceAttention } from '../components/workspace/useAttentionCounts';
 import { WorkspaceNav as Navigation, WorkspaceLabels } from '../components/workspace/navigation';
 export interface WorkspaceLayoutProps {
     children: ReactNode;
     nav: Navigation;
+    attention?: WorkspaceAttention;
     currentPath: string;
     navigationKey?: string;
     busy?: boolean;
@@ -11,6 +13,7 @@ export interface WorkspaceLayoutProps {
         name: string;
         email?: string | null;
         role?: string;
+        settingsHref?: string;
         viewAs?: {
             label: string;
             value: string;
@@ -37,4 +40,4 @@ export interface WorkspaceLayoutProps {
     headerActions?: ReactNode;
     labels?: Partial<WorkspaceLabels>;
 }
-export default function WorkspaceLayout({ children, nav, currentPath, navigationKey, busy, onNavigate, account, workspaceName, workspaceDescription, brand, brandSubtitle, homeHref, contentClassName, sidebarFooter, sidebarBottomNav, sidebarSignOut, footer, headerActions, labels: customLabels, }: WorkspaceLayoutProps): import("react/jsx-runtime").JSX.Element;
+export default function WorkspaceLayout({ children, nav, attention, currentPath, navigationKey, busy, onNavigate, account, workspaceName, workspaceDescription, brand, brandSubtitle, homeHref, contentClassName, sidebarFooter, sidebarBottomNav, sidebarSignOut, footer, headerActions, labels: customLabels, }: WorkspaceLayoutProps): import("react/jsx-runtime").JSX.Element;

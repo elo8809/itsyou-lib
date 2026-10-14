@@ -58,7 +58,16 @@ export function createChatApi(baseUrl: string) {
         data || {},
       );
     }
-    return response.json();
+    const data = await response.json();
+    if (
+      body !== undefined &&
+      typeof window !== 'undefined'
+    ) {
+      window.dispatchEvent(
+        new Event('itsyou:attention-changed'),
+      );
+    }
+    return data;
   }
   return {
     list: (

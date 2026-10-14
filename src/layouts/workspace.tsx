@@ -20,6 +20,9 @@ import {
 import Icon from '../components/base/Icon';
 import Logo from '../components/base/Logo';
 import WorkspaceNav from '../components/workspace/WorkspaceNav';
+import useAttentionCounts, {
+  type WorkspaceAttention,
+} from '../components/workspace/useAttentionCounts';
 import CommandMenu from '../components/workspace/CommandMenu';
 import {
   findActiveRoute,
@@ -40,6 +43,7 @@ const AccountViewOption = forwardRef<
 export interface WorkspaceLayoutProps {
   children: ReactNode;
   nav: Navigation;
+  attention?: WorkspaceAttention;
   currentPath: string;
   navigationKey?: string;
   busy?: boolean;
@@ -48,6 +52,7 @@ export interface WorkspaceLayoutProps {
     name: string;
     email?: string | null;
     role?: string;
+    settingsHref?: string;
     viewAs?: {
       label: string;
       value: string;
@@ -75,6 +80,7 @@ export interface WorkspaceLayoutProps {
 export default function WorkspaceLayout({
   children,
   nav,
+  attention,
   currentPath,
   navigationKey = currentPath,
   busy = false,
@@ -94,6 +100,10 @@ export default function WorkspaceLayout({
   labels: customLabels,
 }: WorkspaceLayoutProps) {
   const labels = { ...workspaceLabels, ...customLabels };
+  const counts = useAttentionCounts(
+    attention,
+    navigationKey,
+  );
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const mainId = useId();
@@ -106,7 +116,14 @@ export default function WorkspaceLayout({
       ...items,
     ];
   }
-  const selected = findActiveRoute(navigation, currentPath);
+  const selected =
+    account?.settingsHref === currentPath
+      ? {
+          group: workspaceName,
+          href: account.settingsHref,
+          name: labels.settings,
+        }
+      : findActiveRoute(navigation, currentPath);
   const hasBottomNav = Object.values(sidebarBottomNav).some(
     (items) => items.length > 0,
   );
@@ -174,6 +191,8 @@ export default function WorkspaceLayout({
           selectedPath={currentPath}
           close={() => setMobileOpen(false)}
           label={labels.navigation}
+          counts={counts}
+          attentionLabel={labels.attention}
         />
       </div>
       {showSidebarActions ? (
@@ -189,6 +208,8 @@ export default function WorkspaceLayout({
               selectedPath={currentPath}
               close={() => setMobileOpen(false)}
               label={labels.secondaryNavigation}
+              counts={counts}
+              attentionLabel={labels.attention}
               showGroupLabels={false}
             />
           )}
@@ -377,6 +398,17 @@ export default function WorkspaceLayout({
                           ),
                         )}
                       </div>
+                    )}
+                    {account.settingsHref && (
+                      <MenuItem>
+                        <Link
+                          href={account.settingsHref}
+                          className="ui-account-settings"
+                        >
+                          {labels.settings}
+                          <Icon name="Settings" size={16} />
+                        </Link>
+                      </MenuItem>
                     )}
                     {account.onSignOut && (
                       <MenuItem>
