@@ -29,6 +29,80 @@
   --ui-shadow-overlay: 0 10px 40px #00000015;
 }
 
+/* Shared by the admin, model and client apps, including nested scroll areas. */
+:root {
+  --ui-scrollbar-thumb: #929292;
+  --ui-scrollbar-thumb-hover: #737373;
+  --ui-scrollbar-track: transparent;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-scrollbar-thumb) var(--ui-scrollbar-track);
+}
+
+/* Keep the fallback separate: mixed standard and WebKit rules can conflict. */
+@supports not (scrollbar-color: auto) {
+  * {
+    scrollbar-width: auto;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: var(--ui-scrollbar-track);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    min-height: 28px;
+    min-width: 28px;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: var(--ui-scrollbar-thumb);
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover,
+  ::-webkit-scrollbar-thumb:active {
+    background-color: var(--ui-scrollbar-thumb-hover);
+  }
+
+  ::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  @media (forced-colors: active) {
+    ::-webkit-scrollbar {
+      width: auto;
+      height: auto;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: ButtonText;
+      border: 0;
+    }
+
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-corner {
+      background: Canvas;
+    }
+  }
+}
+
+/* Use native controls in high-contrast mode. */
+@media (forced-colors: active) {
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+}
+
 /* Workspace shell. The document scrolls so deep links and back-to-top work consistently. */
 .ui-shell {
   min-height: 100dvh;
