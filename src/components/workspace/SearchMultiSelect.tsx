@@ -66,6 +66,13 @@ export default function SearchMultiSelect({
             id={id}
             className="ui-input !pl-3 !pr-9"
             autoComplete="off"
+            title={value
+              .map(
+                (v) =>
+                  options.find((o) => o.id === v)?.label ||
+                  v,
+              )
+              .join(', ')}
             placeholder={placeholder}
             aria-label={label}
             displayValue={(values: string[]) => {
@@ -108,10 +115,15 @@ export default function SearchMultiSelect({
             >
               {({ selected }) => (
                 <>
-                  <span>{option.label}</span>
+                  <span
+                    className="min-w-0 flex-1 truncate"
+                    title={option.label}
+                  >
+                    {option.label}
+                  </span>
                   <span
                     aria-hidden="true"
-                    className={`flex h-5 w-5 items-center justify-center rounded border text-xs ${selected ? 'bg-dark border-dark text-white' : 'border-gray-300'}`}
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border text-xs ${selected ? 'bg-dark border-dark text-white' : 'border-gray-300'}`}
                   >
                     {selected ? '✓' : ''}
                   </span>

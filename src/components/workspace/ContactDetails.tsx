@@ -213,9 +213,13 @@ export function ContactPopover({
         {({ close }) => (
           <>
             <div className="ui-contact-header">
-              <div>
+              <div className="min-w-0 flex-1">
                 <h2 id={titleId}>{labels.title}</h2>
-                {name && <p>{name}</p>}
+                {name && (
+                  <p className="truncate" title={name}>
+                    {name}
+                  </p>
+                )}
               </div>
               <button
                 type="button"

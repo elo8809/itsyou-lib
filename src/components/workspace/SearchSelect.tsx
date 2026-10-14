@@ -134,6 +134,13 @@ const SearchSelect = forwardRef<
             id={inputId}
             className="ui-input"
             autoComplete="off"
+            title={
+              selected
+                ? [selected.label, selected.meta]
+                    .filter(Boolean)
+                    .join(' · ')
+                : undefined
+            }
             displayValue={(
               option: SearchSelectOption | null,
             ) =>
@@ -186,13 +193,26 @@ const SearchSelect = forwardRef<
                     <>
                       <span className="ui-search-select-option-copy">
                         <span className="ui-search-select-option-title">
-                          {option.label}
+                          <span
+                            className="min-w-0 truncate"
+                            title={option.label}
+                          >
+                            {option.label}
+                          </span>
                           {option.meta && (
-                            <small>{option.meta}</small>
+                            <small
+                              className="max-w-[40%] truncate"
+                              title={option.meta}
+                            >
+                              {option.meta}
+                            </small>
                           )}
                         </span>
                         {option.description && (
-                          <span className="ui-search-select-description">
+                          <span
+                            className="ui-search-select-description"
+                            title={option.description}
+                          >
                             {option.description}
                           </span>
                         )}

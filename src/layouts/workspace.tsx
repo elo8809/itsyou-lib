@@ -32,7 +32,9 @@ const AccountViewOption = forwardRef<
   HTMLButtonElement,
   ComponentPropsWithoutRef<'button'>
 >(function AccountViewOption(props, ref) {
-  return <button {...props} ref={ref} role="menuitemradio" />;
+  return (
+    <button {...props} ref={ref} role="menuitemradio" />
+  );
 });
 
 export interface WorkspaceLayoutProps {
@@ -314,9 +316,19 @@ export default function WorkspaceLayout({
                     className="ui-account-menu"
                   >
                     <div className="ui-account-info">
-                      <strong>{account.name}</strong>
+                      <strong
+                        className="truncate"
+                        title={account.name}
+                      >
+                        {account.name}
+                      </strong>
                       {account.email && (
-                        <span>{account.email}</span>
+                        <span
+                          className="truncate"
+                          title={account.email}
+                        >
+                          {account.email}
+                        </span>
                       )}
                       {account.role && (
                         <small>{account.role}</small>

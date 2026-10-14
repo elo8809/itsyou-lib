@@ -101,12 +101,17 @@ function Modal(props: IProps) {
                     'flex justify-between border-b px-6 py-3'
                   }
                 >
-                  <h4 className={'text-2xl'}>{name}</h4>
+                  <h4
+                    className={'min-w-0 truncate text-2xl'}
+                    title={name}
+                  >
+                    {name}
+                  </h4>
                   <Icon
                     onClick={close}
                     size={30}
                     className={
-                      'p-1 hover:bg-gray-50 cursor-pointer rounded'
+                      'shrink-0 p-1 hover:bg-gray-50 cursor-pointer rounded'
                     }
                     name={'Close'}
                   />

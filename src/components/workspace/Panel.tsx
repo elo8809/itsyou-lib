@@ -45,7 +45,9 @@ export default function Panel({
         <div className="ui-panel-header">
           <div className="min-w-0 flex-1">
             {typeof title === 'string' ? (
-              <h2>{title}</h2>
+              <h2 className="truncate" title={title}>
+                {title}
+              </h2>
             ) : (
               title
             )}

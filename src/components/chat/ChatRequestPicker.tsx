@@ -88,8 +88,15 @@ export default function ChatRequestPicker({
       >
         <Icon name="Inbox" size={18} />
         <span id={`${id}-value`}>
-          <strong>{value?.project || t.general}</strong>
-          <small>{value?.client.name || t.noRequest}</small>
+          <strong title={value?.project || t.general}>
+            {value?.project || t.general}
+          </strong>
+          <small
+            className="truncate"
+            title={value?.client.name || t.noRequest}
+          >
+            {value?.client.name || t.noRequest}
+          </small>
         </span>
         <span className="ui-chat-help">
           {value ? t.changeRequest : t.selectRequest}
@@ -131,7 +138,8 @@ export default function ChatRequestPicker({
             </button>
             {items.map((item) => {
               // one group chat per request
-              const taken = !!item.chatId && item.chatId !== chatId;
+              const taken =
+                !!item.chatId && item.chatId !== chatId;
               return (
                 <button
                   type="button"
@@ -141,8 +149,13 @@ export default function ChatRequestPicker({
                   aria-pressed={value?.id === item.id}
                   onClick={() => choose(item)}
                 >
-                  <strong>{item.project}</strong>
-                  <small>
+                  <strong title={item.project}>
+                    {item.project}
+                  </strong>
+                  <small
+                    className="truncate"
+                    title={item.client.name}
+                  >
                     {item.client.name}
                     {taken && ` · ${t.requestHasChat}`}
                   </small>

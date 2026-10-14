@@ -141,6 +141,7 @@ function NotificationRow({
             onNavigate?.();
           }}
           className="ui-notification-title"
+          title={item.title}
         >
           {item.title}
         </Link>
@@ -247,7 +248,9 @@ function Content({
           <EmptyState
             icon="Bell"
             title={labels.empty}
-            description={props.emptyHint || labels.emptyHint}
+            description={
+              props.emptyHint || labels.emptyHint
+            }
           />
         ) : (
           feed && (

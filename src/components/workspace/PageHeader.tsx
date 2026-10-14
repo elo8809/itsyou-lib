@@ -33,13 +33,31 @@ export default function PageHeader({
         </button>
       )}
       <div className="ui-page-heading">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1 max-w-full">
           {eyebrow && (
             <p className="ui-eyebrow">{eyebrow}</p>
           )}
-          <h1>{title}</h1>
+          <h1
+            className={
+              typeof title === 'string'
+                ? 'truncate'
+                : undefined
+            }
+            title={
+              typeof title === 'string' ? title : undefined
+            }
+          >
+            {title}
+          </h1>
           {subtitle && (
-            <div className="ui-page-description">
+            <div
+              className="ui-page-description"
+              title={
+                typeof subtitle === 'string'
+                  ? subtitle
+                  : undefined
+              }
+            >
               {subtitle}
             </div>
           )}

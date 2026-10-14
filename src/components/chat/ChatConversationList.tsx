@@ -171,7 +171,11 @@ export default function ChatConversationList({
         </span>
         <span className="ui-chat-list-content">
           <span className="ui-chat-list-title">
-            <strong>
+            <strong
+              title={
+                ownGeneral ? t.generalChat : chat.title
+              }
+            >
               {ownGeneral ? t.generalChat : chat.title}
             </strong>
             {chat.updatedAt && (

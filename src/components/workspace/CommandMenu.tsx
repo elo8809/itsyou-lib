@@ -131,7 +131,12 @@ export default function CommandMenu({
                   size={19}
                   aria-hidden="true"
                 />
-                <span>{item.name}</span>
+                <span
+                  className="min-w-0 truncate"
+                  title={item.name}
+                >
+                  {item.name}
+                </span>
                 <small>{item.group}</small>
                 <Icon
                   name="ArrowRight"

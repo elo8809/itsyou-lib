@@ -496,7 +496,9 @@ export default function ChatThread({
           />
         </span>
         <div className="ui-chat-thread-title">
-          <h2>{title || t.loading}</h2>
+          <h2 title={title || t.loading}>
+            {title || t.loading}
+          </h2>
           <button
             type="button"
             onClick={() => setDetails(true)}
@@ -869,7 +871,7 @@ export default function ChatThread({
                     {initials(p.name)}
                   </span>
                   <span className="ui-chat-person-name">
-                    <strong>
+                    <strong title={p.name}>
                       {p.name}
                       {p.id === viewer.id
                         ? ` (${t.you})`

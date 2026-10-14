@@ -193,10 +193,20 @@ export default function ChatGroupForm({
       {lockRequest && request ? (
         <div className="ui-chat-request-context">
           <Icon name="Inbox" size={22} />
-          <div>
+          <div className="min-w-0 flex-1">
             <span>{t.request}</span>
-            <strong>{request.project}</strong>
-            <small>{request.client.name}</small>
+            <strong
+              className="truncate"
+              title={request.project}
+            >
+              {request.project}
+            </strong>
+            <small
+              className="truncate"
+              title={request.client.name}
+            >
+              {request.client.name}
+            </small>
           </div>
         </div>
       ) : (
@@ -239,7 +249,12 @@ export default function ChatGroupForm({
       >
         {selected.map((p) => (
           <span key={p.id} className="ui-chat-chip">
-            {p.name}
+            <span
+              className="min-w-0 truncate"
+              title={p.name}
+            >
+              {p.name}
+            </span>
             {p.id === viewer.id ? (
               ` (${t.you})`
             ) : (
@@ -314,7 +329,7 @@ export default function ChatGroupForm({
               {initials(p.name)}
             </span>
             <span className="ui-chat-person-name">
-              <strong>{p.name}</strong>
+              <strong title={p.name}>{p.name}</strong>
               <small>
                 {[p.email, p.client?.name]
                   .filter(Boolean)
