@@ -137,11 +137,12 @@ export default function AccountSettings({
       setPasswordError(t.mismatch);
       return;
     }
-    if (
-      password.length < 12 ||
-      new TextEncoder().encode(password).length > 72
-    ) {
+    if (password.length < 12) {
       setPasswordError(t.errors.PASSWORD_LENGTH);
+      return;
+    }
+    if (new TextEncoder().encode(password).length > 72) {
+      setPasswordError(t.errors.PASSWORD_TOO_LONG);
       return;
     }
     setBusy('password');

@@ -38,6 +38,7 @@ export declare const accountLabels: {
         errors: {
             CURRENT_PASSWORD: string;
             PASSWORD_LENGTH: string;
+            PASSWORD_TOO_LONG: string;
             EMAIL_INVALID: string;
             EMAIL_UNCHANGED: string;
             EMAIL_UNAVAILABLE: string;
@@ -91,6 +92,7 @@ export declare const accountLabels: {
         errors: {
             CURRENT_PASSWORD: string;
             PASSWORD_LENGTH: string;
+            PASSWORD_TOO_LONG: string;
             EMAIL_INVALID: string;
             EMAIL_UNCHANGED: string;
             EMAIL_UNAVAILABLE: string;

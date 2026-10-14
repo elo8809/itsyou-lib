@@ -328,6 +328,11 @@ const { chromium } = require('playwright');
         .getByText(account.email, { exact: true })
         .waitFor();
       await page.keyboard.press('Escape');
+      await page.evaluate(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        document.activeElement?.blur();
+      });
+      await page.waitForFunction(() => window.scrollY === 0);
       await page.screenshot({
         path: `/tmp/itsyou-settings-${role}.png`,
         fullPage: true,

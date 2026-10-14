@@ -13,7 +13,7 @@ export const accountLabels = {
     currentPassword: 'Current password',
     newPassword: 'New password',
     confirmPassword: 'Confirm new password',
-    passwordRule: 'At least 12 characters. Up to 72 bytes.',
+    passwordRule: 'At least 12 characters.',
     code: 'Verification code',
     codeHint:
       'Enter the 6-digit code from your email. It expires after 10 minutes.',
@@ -47,8 +47,9 @@ export const accountLabels = {
     errors: {
       CURRENT_PASSWORD:
         'Your current password is incorrect.',
-      PASSWORD_LENGTH:
-        'Use at least 12 characters and no more than 72 bytes (some characters use more than one byte).',
+      PASSWORD_LENGTH: 'Use at least 12 characters.',
+      PASSWORD_TOO_LONG:
+        'This password is too long. Use a shorter password.',
       EMAIL_INVALID: 'Enter a valid email address.',
       EMAIL_UNCHANGED: 'Enter a different email address.',
       EMAIL_UNAVAILABLE:
@@ -85,8 +86,7 @@ export const accountLabels = {
     currentPassword: 'Aktuelles Passwort',
     newPassword: 'Neues Passwort',
     confirmPassword: 'Neues Passwort bestätigen',
-    passwordRule:
-      'Mindestens 12 Zeichen. Maximal 72 Bytes.',
+    passwordRule: 'Mindestens 12 Zeichen.',
     code: 'Bestätigungscode',
     codeHint:
       'Gib den 6-stelligen Code aus deiner E-Mail ein. Er ist 10 Minuten gültig.',
@@ -120,8 +120,9 @@ export const accountLabels = {
     errors: {
       CURRENT_PASSWORD:
         'Dein aktuelles Passwort ist nicht korrekt.',
-      PASSWORD_LENGTH:
-        'Verwende mindestens 12 Zeichen und maximal 72 Bytes. Manche Zeichen benötigen mehrere Bytes.',
+      PASSWORD_LENGTH: 'Verwende mindestens 12 Zeichen.',
+      PASSWORD_TOO_LONG:
+        'Dieses Passwort ist zu lang. Verwende ein kürzeres Passwort.',
       EMAIL_INVALID: 'Gib eine gültige E-Mail-Adresse ein.',
       EMAIL_UNCHANGED:
         'Gib eine andere E-Mail-Adresse ein.',
